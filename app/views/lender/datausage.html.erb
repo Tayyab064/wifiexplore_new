@@ -1,0 +1,339 @@
+<link rel="stylesheet" href="../admin/css/app.v1.css" type="text/css" />
+
+<section > 
+	<section class="vbox"> 
+		<section class="scrollable padder"> 
+			<div class="row">
+				<section class="panel panel-default"> 
+					<header class="panel-heading font-bold">Wifi</header> 
+					<div class="panel-body"> 
+						<div id="flot-bar" style="height:480px"></div> 
+					</div> 
+				</section>
+			</div>
+
+			<section class="panel panel-default"> 
+				<header class="panel-heading"> Data Usage 
+					<i class="fa fa-info-sign text-muted" ></i> 
+				</header> 
+				<div class="table-responsive"> 
+					<table id='connections' class="table table-striped m-b-none" data-ride="datatables"> 
+						<thead> 
+							<tr> 
+								<th width="15%">Wifi</th> 
+								<th width="15%">User</th> 
+								<th width="15%">Connected At</th> 
+								<th width="15%">Disconnected At</th> 
+								<th width="20%%">Download Data</th>
+								<th width="20%">Upload Data</th>
+							</tr> 
+						</thead> 
+						<tbody> 
+
+						<% @connection.each do |connection| %>
+							<% if connection.user.present? %>
+								<% use = connection.user.name %>
+							<% else %>
+								<% use = 'Name Missing' %>
+							<% end %>
+
+							<% if connection.wifi.present? %>
+								<% wif = connection.wifi.name %>
+							<% else %>
+								<% wif = 'Wifi Missing' %>
+							<% end %>
+							<tr>
+								<td><%= link_to wif, "#wif_mod_#{connection.wifi_id}", "data-toggle" => "modal" %></td>
+								<td><%= link_to use, "#user_mod_#{connection.user_id}", "data-toggle" => "modal" %></td>
+								<td><%= connection.connected_at.strftime('%I:%M%p %d-%m-%Y') %></td>
+								<td><%= connection.disconnected_at.present? ? connection.disconnected_at.strftime('%I:%M%p %d-%m-%Y') : ''  %></td>
+								<td><%= connection.download_data %></td>
+								<td><%= connection.upload_data %></td>
+								<td><%= connection.total_bill %></td>
+							</tr>
+
+
+							<!-- Wifi Modal -->
+							  <div class="modal fade" id="wif_mod_<%= connection.wifi_id%>" role="dialog">
+							    <div class="modal-dialog">
+							    
+							      <!-- Modal content-->
+							      <div class="modal-content">
+							        <div class="modal-header">
+							          <button type="button" class="close" data-dismiss="modal">&times;</button>
+							          <h4 class="modal-title"><%= wif %></h4>
+							        </div>
+							        <div class="modal-body">
+							          <div class="container-fluid bd-example-row">
+							          <% if connection.wifi.present? %>
+							        	<div class="row">
+							        		<div class="col-md-4">
+							         			<strong>Owner: </strong>
+							         		</div>
+							         		<div class="col-md-8">
+							         			<%= connection.wifi.user.email %>
+							         		</div>
+							         	</div>
+							         	<hr>
+							         	<div class="row">
+							        		<div class="col-md-4">
+							         			<strong>Address: </strong>
+							         		</div>
+							         		<div class="col-md-8">
+							         			<%= connection.wifi.address %>
+							         		</div>
+							         	</div>
+							         	<hr>
+							         	<div class="row">
+							        		<div class="col-md-4">
+							         			<strong>Latitude: </strong>
+							         		</div>
+							         		<div class="col-md-8">
+							         			<%= connection.wifi.latitude %>
+							         		</div>
+							         	</div>
+							         	<hr>
+							         	<div class="row">
+							        		<div class="col-md-4">
+							         			<strong>Longitude: </strong>
+							         		</div>
+							         		<div class="col-md-8">
+							         			<%= connection.wifi.longitude %>
+							         		</div>
+							         	</div>
+							         	<hr>
+							         	<div class="row">
+							        		<div class="col-md-4">
+							         			<strong>SSID: </strong>
+							         		</div>
+							         		<div class="col-md-8">
+							         			<%= connection.wifi.ssid %>
+							         		</div>
+							         	</div>
+							         	<hr>
+							         	<div class="row">
+							        		<div class="col-md-4">
+							         			<strong>Price Per 100MB: </strong>
+							         		</div>
+							         		<div class="col-md-8">
+							         			<%= connection.wifi.price.round(2) %>
+							         		</div>
+							         	</div>
+							         	<hr>
+							         	<div class="row">
+							        		<div class="col-md-4">
+							         			<strong>Speed: </strong>
+							         		</div>
+							         		<div class="col-md-8">
+							         			<%= (connection.wifi.avg_speed/1024).round %>MB
+							         		</div>
+							         	</div>
+							          <% else %>
+							          	<div class="row">
+							        		<h4>Wifi not present</h4>
+							         	</div>
+							          <% end %>
+							          </div>           
+							        </div>
+							        <div class="modal-footer">
+							          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							        </div>
+							      </div>
+							      
+							    </div>
+							  </div>
+
+							<!-- User Modal -->
+							  <div class="modal fade" id="user_mod_<%= connection.user_id%>" role="dialog">
+							    <div class="modal-dialog">
+							    
+							      <!-- Modal content-->
+							      <div class="modal-content">
+							        <div class="modal-header">
+							          <button type="button" class="close" data-dismiss="modal">&times;</button>
+							          <h4 class="modal-title"><%= use %></h4>
+							        </div>
+							        <div class="modal-body">
+							         	<div class="container-fluid bd-example-row">
+							         	<% if connection.user.present? %>
+								        	<div class="row">
+								        		<div class="col-md-4">
+								         			<strong>First Name: </strong>
+								         		</div>
+								         		<div class="col-md-8">
+								         			<%= connection.user.first_name.capitalize %>
+								         		</div>
+								         	</div>
+								         	<hr>
+								         	<div class="row">
+								        		<div class="col-md-4">
+								         			<strong>Last Name: </strong>
+								         		</div>
+								         		<div class="col-md-8">
+								         			<%= connection.user.last_name.capitalize %>
+								         		</div>
+								         	</div>
+								         	<hr>
+								         	<div class="row">
+								        		<div class="col-md-4">
+								         			<strong>Email: </strong>
+								         		</div>
+								         		<div class="col-md-8">
+								         			<%= connection.user.email %>
+								         		</div>
+								         	</div>
+								         	<hr>
+								         	<div class="row">
+								        		<div class="col-md-4">
+								         			<strong>Mobile Number: </strong>
+								         		</div>
+								         		<div class="col-md-8">
+								         			<%= connection.user.mobile_number %>
+								         		</div>
+								         	</div>
+								         	<hr>
+								         	<div class="row">
+								        		<div class="col-md-4">
+								         			<strong>Email Verified: </strong>
+								         		</div>
+								         		<div class="col-md-8">
+								         			<%= connection.user.email_verified ? 'Yes' : 'No' %>
+								         		</div>
+								         	</div>
+								         	<hr>
+								         	<div class="row">
+								        		<div class="col-md-4">
+								         			<strong>Number Verified: </strong>
+								         		</div>
+								         		<div class="col-md-8">
+								         			<%= connection.user.number_verified ? 'Yes' : 'No' %>
+								         		</div>
+								         	</div>
+								         	<hr>
+								         	<div class="row">
+								        		<div class="col-md-4">
+								         			<strong>Successfully Terminated: </strong>
+								         		</div>
+								         		<div class="col-md-8">
+								         			<%= connection.user.terminated_successfully ? 'Yes' : 'No' %>
+								         		</div>
+								         	</div>
+								         <% else %>
+								         	<div class="row">
+								        		<h4>User not present</h4>
+								         	</div>
+								         <% end %>
+							          </div>        
+							        </div>
+							        <div class="modal-footer">
+							          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							        </div>
+							      </div>
+							      
+							    </div>
+							  </div>
+
+						<% end %>
+						</tbody> 
+					</table> 
+				</div> 
+			</section> 
+		</section> 
+	</section>
+</section>
+
+<!-- Flot --> 
+<script src="../admin/js/charts/flot/jquery.flot.min.js"></script> 
+<script src="../admin/js/charts/flot/jquery.flot.tooltip.min.js"></script> 
+<script src="../admin/js/charts/flot/jquery.flot.resize.js"></script> 
+<script src="../admin/js/charts/flot/jquery.flot.orderBars.js"></script> 
+<script src="../admin/js/charts/flot/jquery.flot.pie.min.js"></script> 
+<script src="../admin/js/charts/flot/jquery.flot.grow.js"></script> 
+<script src="../admin/js/charts/flot/demo.js"></script> 
+<script src="../admin/js/app.plugin.js"></script>
+
+<script type="text/javascript">
+	$(function() {
+
+		$('#connections').DataTable({
+	      "paging": true,
+	      "lengthChange": true,
+	      "searching": true,
+	      "ordering": true,
+	      "info": true,
+	      "autoWidth": true
+	    });
+
+	    $(".dataTables_length").addClass("col-md-6");
+
+		var d1_1 = [];
+
+		var d1_2 = [];
+
+		var ins = 0 ;
+		
+		<% @wifis.each do |wif| %>
+			var updat = 0.0 ;
+			var dwdat = 0.0 ;
+
+			<% wif.connections.each do |conn| %>
+				updat = updat + <%= conn.upload_data %>;
+				dwdat = dwdat + <%= conn.download_data %>
+			<% end %>
+
+			d1_1.push([ins , dwdat]);
+			d1_2.push([ins+1 , updat]);
+			ins = ins + 10 ;
+		<% end %>
+
+		var data1 = [
+		    {
+		        label: "Download Data",
+		        data: d1_1,
+		        bars: {
+		            show: true,
+		            fill: true,
+		            lineWidth: 1,
+		            order: 1,
+		            fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0.9}] }
+		        },
+		        color: "#6783b7"
+		    },
+		    {
+		        label: "Upload Data",
+		        data: d1_2,
+		        bars: {
+		            show: true,
+		            fill: true,
+		            lineWidth: 1,
+		            order: 2,
+		            fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0.9}] }
+		        },
+		        color: "#ffad99"
+		    }
+		  ];
+
+		$("#flot-bar").length && $.plot($("#flot-bar"), data1, {
+	      xaxis: {
+	          
+	      },
+	      yaxis: {
+	          
+	      },
+	      grid: {
+	          hoverable: true,
+	          clickable: false,
+	          borderWidth: 0
+	      },
+	      legend: {
+	          labelBoxBorderColor: "none",
+	          position: "left"
+	      },
+	      series: {
+	          shadowSize: 1
+	      },
+	      tooltip: false
+	  	});
+
+	});
+</script>
