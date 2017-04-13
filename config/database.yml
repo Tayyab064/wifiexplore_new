@@ -79,7 +79,12 @@ test:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
-  <<: *default
-  database: wifiexplore_production
-  username: wifiexplore
-  password: <%= ENV['WIFIEXPLORE_DATABASE_PASSWORD'] %>
+  adapter: postgresql
+  encoding: unicode
+  username: hirpthdhnmrsnd
+  password: 653a0b4baeb46fc7a55ddddaad64a1e21ff45f1c60fdc8d83a88f766d0628e66
+  hostname: ec2-54-243-185-132.compute-1.amazonaws.com
+  pool: 5
+  port: 5432
+  url: postgres://hirpthdhnmrsnd:653a0b4baeb46fc7a55ddddaad64a1e21ff45f1c60fdc8d83a88f766d0628e66@ec2-54-243-185-132.compute-1.amazonaws.com:5432/d9du635q5od9fn
+  database: d9du635q5od9fn
