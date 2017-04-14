@@ -33,4 +33,43 @@ Rails.application.routes.draw do
 
   end
 
+
+  scope 'admin' do
+
+    get 'signin' => 'admin#signin' , as: 'admin_signin_page'
+    post 'approve_signin' => 'admin#approve_signin' , as: 'admin_approve_signin'
+    get 'signout' => 'admin#signout' , as: 'admin_signout'
+
+    get 'dashboard' => 'admin#index'
+    get 'wifi_detail' => 'admin#wifi_table'
+    get 'wifi_map' => 'admin#wifi_map'
+    get 'users' => 'admin#users'
+     get 'lenders' => 'admin#lenders'
+    get 'connections' => 'admin#connections'
+    get 'earnings' => 'admin#payments'
+    get 'block' => 'admin#block'
+    get 'statistics' => 'admin#stats'
+    get 'stripe' => 'admin#stripe_account_list'
+    get 'withdraw_pending' => 'admin#withdraw_pending'
+    get 'withdraw_transferred' => 'admin#withdraw_transferred'
+    get 'defaulter' => 'admin#term_success_false'
+    get 'stripe/refund/:ch_tok' => 'admin#stripe_account_refund' , as: 'refund_stripe'
+
+    get 'defaulter/success/:id' => 'admin#term_success_mark_true' , as: 'successfully_terminated_true'
+
+    get 'block_user/:id' => 'admin#block_user' , as: 'block_user'
+    get 'unblock_user/:id' => 'admin#unblock_user' , as: 'unblock_user'
+
+    get 'block_wifi/:id' => 'admin#block_wifi' , as: 'block_wifi'
+    get 'unblock_wifi/:id' => 'admin#unblock_wifi' , as: 'unblock_wifi'
+
+    post 'rest_pass/:id' => 'admin#reset_pass' , as: 'reset_password_admin'
+    get 'withdraw/pending/:id' => 'admin#mark_withdraw_pending' , as: 'mark_withdraw_pending'
+
+    get 'destroy/:id' => 'admin#delete_user' , as: 'user_destroy'
+
+    get 'wifis_:id' => 'admin#lender_wifis' , as: 'lender_wifis'
+
+  end
+
 end

@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170413085300) do
+ActiveRecord::Schema.define(version: 20170414113746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "admins", force: :cascade do |t|
+    t.string   "email"
+    t.string   "password_digest"
+    t.string   "password_reset_token"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
 
   create_table "connections", force: :cascade do |t|
     t.datetime "disconnected_at"
@@ -83,6 +91,15 @@ ActiveRecord::Schema.define(version: 20170413085300) do
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.index ["lender_id"], name: "index_wifis_on_lender_id", using: :btree
+  end
+
+  create_table "withdraws", force: :cascade do |t|
+    t.float    "amount",     default: 0.0
+    t.boolean  "transfered", default: false
+    t.integer  "lender_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["lender_id"], name: "index_withdraws_on_lender_id", using: :btree
   end
 
 end

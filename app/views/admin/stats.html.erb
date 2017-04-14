@@ -1,0 +1,176 @@
+<link rel="stylesheet" href="css/app.v1.css" type="text/css" />
+
+<section > 
+	<section class="vbox"> 
+		<section class="scrollable padder"> 
+			<div class="row">
+				<section class="panel panel-default">
+					<header class="panel-heading font-bold">Wifi</header> 
+					<div class="panel-body"> 
+						<div id="flot-chart" style="height:480px"></div> 
+					</div> 
+				</section>
+			</div>
+			<div class="row">
+				<section class="panel panel-default"> 
+					<header class="panel-heading font-bold">Connection</header> 
+					<div class="panel-body"> 
+						<div id="flot-bar" style="height:480px"></div> 
+					</div> 
+				</section>
+			</div>
+		</section> 
+	</section>
+</section>
+
+<!-- Flot --> 
+<script src="js/charts/flot/jquery.flot.min.js"></script> 
+<script src="js/charts/flot/jquery.flot.tooltip.min.js"></script> 
+<script src="js/charts/flot/jquery.flot.resize.js"></script> 
+<script src="js/charts/flot/jquery.flot.orderBars.js"></script> 
+<script src="js/charts/flot/jquery.flot.pie.min.js"></script> 
+<script src="js/charts/flot/jquery.flot.grow.js"></script> 
+<script src="js/charts/flot/demo.js"></script> 
+<script src="js/app.plugin.js"></script>
+
+<script type="text/javascript">
+	$(function() {
+
+		var d1_1 = [];
+
+		var d1_2 = [];
+
+		var d1_3 = [];
+
+		var ins = 0 ;
+		<% @connections.each do |conn| %>
+			d1_1.push([ins , <%= conn.wifi.present? ? conn.wifi.connections.count : 0 %>]);
+			d1_2.push([ins+1 , <%= ( conn.download_data + conn.upload_data ).round %>]);
+			d1_3.push([ins+2 , <%= conn.total_bill.round %>]);
+			ins = ins + 10 ;
+		<% end %>
+
+		var data1 = [
+		    {
+		        label: "Connected User",
+		        data: d1_1,
+		        bars: {
+		            show: true,
+		            fill: true,
+		            lineWidth: 1,
+		            order: 1,
+		            fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0.9}] }
+		        },
+		        color: "#6783b7"
+		    },
+		    {
+		        label: "Data Usage",
+		        data: d1_2,
+		        bars: {
+		            show: true,
+		            fill: true,
+		            lineWidth: 1,
+		            order: 2,
+		            fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0.9}] }
+		        },
+		        color: "#ffad99"
+		    },
+		    {
+		        label: "Earning",
+		        data: d1_3,
+		        bars: {
+		            show: true,
+		            fill: true,
+		            lineWidth: 1,
+		            order: 3,
+		            fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0.9}] }
+		        },
+		        color: "#4fcdb7"
+		    }
+		  ];
+
+		$("#flot-bar").length && $.plot($("#flot-bar"), data1, {
+	      xaxis: {
+	          
+	      },
+	      yaxis: {
+	          
+	      },
+	      grid: {
+	          hoverable: true,
+	          clickable: false,
+	          borderWidth: 0
+	      },
+	      legend: {
+	          labelBoxBorderColor: "none",
+	          position: "left"
+	      },
+	      series: {
+	          shadowSize: 1
+	      },
+	      tooltip: false
+	  	});
+
+
+		var d2 = [];
+	    var d3 = [];
+
+		<% @wifis.each_with_index do |wif,ind| %>
+			d2.push([<%= ind +1 %> , <%= wif.connections.count %>]);
+			d3.push([<%= ind +1 %> , <%= wif.connections.where.not(disconnected_at: nil).count %>]);
+		<% end %>
+
+	  $("#flot-chart").length && $.plot($("#flot-chart"), [{
+	          data: d2,
+	          label: "Users"
+	      }, {
+	          data: d3,
+	          label: "Connected Users"
+	      }], 
+	      {
+	        series: {
+	            lines: {
+	                show: true,
+	                lineWidth: 1,
+	                fill: true,
+	                fillColor: {
+	                    colors: [{
+	                        opacity: 0.3
+	                    }, {
+	                        opacity: 0.3
+	                    }]
+	                }
+	            },
+	            points: {
+	                show: true
+	            },
+	            shadowSize: 2
+	        },
+	        grid: {
+	            hoverable: true,
+	            clickable: false,
+	            tickColor: "#f0f0f0",
+	            borderWidth: 0
+	        },
+	        colors: ["#1bb399","#177bbb"],
+	        xaxis: {
+	            ticks: 15,
+	            tickDecimals: 0
+	        },
+	        yaxis: {
+	            ticks: 10,
+	            tickDecimals: 0
+	        },
+	        tooltip: false,
+	        tooltipOpts: {
+	          content: "'%s' of %x.1 is %y.4",
+	          defaultTheme: false,
+	          shifts: {
+	            x: 0,
+	            y: 20
+	          }
+	        }
+	      }
+	  );
+	});
+</script>

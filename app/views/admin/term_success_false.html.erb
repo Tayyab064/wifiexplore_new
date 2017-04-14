@@ -1,0 +1,51 @@
+<section > 
+<section class="vbox"> 
+<section class="scrollable padder"> 
+	<div class="m-b-md"> 
+	</div> 
+	<section class="panel panel-default"> 
+		<header class="panel-heading"> Defaulters 
+			<i class="fa fa-info-sign text-muted" ></i> 
+		</header> 
+		<div class="table-responsive"> 
+			<table id='users_term' class="table table-striped m-b-none" data-ride="datatables"> 
+				<thead> 
+					<tr> 
+						<th>Name</th> 
+						<th>Email</th> 
+						<th>Mobile Number</th> 
+						<th>Defaulter</th>
+					</tr> 
+				</thead> 
+				<tbody> 
+					<% @user.each do |user| %>
+					<tr>
+						<td><%= user.name %></td>
+						<td><%= user.email %></td>
+						<td><%= user.mobile_number %></td>
+						<td><%= link_to('Defaulter' , successfully_terminated_true_path(user.id) , class: 'btn btn-danger') %>
+						</td>
+					</tr>
+					<% end %>
+				</tbody> 
+			</table> 
+		</div> 
+	</section> 
+</section>
+</section>
+</section>
+
+<script>
+  $(function () {
+    $("#users_term").DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+
+    $(".dataTables_length").addClass("col-md-6");
+  });
+</script>

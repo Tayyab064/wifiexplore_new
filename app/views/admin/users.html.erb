@@ -1,0 +1,106 @@
+<section > 
+<section class="vbox"> 
+<section class="scrollable padder"> 
+	<div class="m-b-md"> 
+		<!-- <h3 class="m-b-none">Users</h3>  -->
+	</div> 
+	<section class="panel panel-default"> 
+		<header class="panel-heading"> Users 
+			<i class="fa fa-info-sign text-muted" ></i> 
+		</header> 
+		<div class="table-responsive"> 
+			<table id='users' class="table table-striped m-b-none" data-ride="datatables"> 
+				<thead> 
+					<tr> 
+						<th>Email</th> 
+						<th>Mobile Number</th> 
+						<th>Last Connection</th>
+						<th>Successfully Terminated</th>
+						<th>Block Access</th>
+						<th>Reset Password</th>
+						<th>Delete</th>
+					</tr> 
+				</thead> 
+				<tbody> 
+					<% @user.each do |user| %>
+					<tr>
+
+						<td><%= user.email %></td>
+						<td><%= user.mobile_number %></td>
+						<td><%= user.connections.count > 0 ? time_ago_in_words(user.connections.order(connected_at: 'DESC').first.connected_at)+' ago' : '' %></td>
+						<td><%= user.successfully_terminated ? 'Yes' : 'No' %></td>
+						<td><%= user.blocked ? link_to('Blocked' , unblock_user_path(user.id) , class: 'btn btn-danger') : link_to('Block' , block_user_path(user.id) , class: 'btn btn-success') %>
+						</td>
+						<td><%= link_to 'Reset', "#user_reset_#{user.id}", "data-toggle" => "modal" , class: 'btn btn-primary' %></td>
+						<td><%= link_to 'Delete', user_destroy_path(user.id) , class: 'btn btn-danger' %></td>
+					</tr>
+
+
+					<div class="modal fade" id="user_reset_<%= user.id%>" role="dialog">
+					    <div class="modal-dialog">
+					    
+					      <!-- Modal content-->
+					      <div class="modal-content">
+					        <div class="modal-header">
+					          <button type="button" class="close" data-dismiss="modal">&times;</button>
+					          <h4 class="modal-title" style="text-align: center;"><%= user.email %></h4>
+					        </div>
+					        <div class="modal-body">
+					          <div class="container-fluid bd-example-row">
+					          
+					          <%= form_tag(reset_password_admin_path(user.id), method: "post") do %>
+					         	<div class="row form-group" >
+					        		<div class="col-md-4">
+					         			<strong>Password: </strong>
+					         		</div>
+					         		<div class="col-md-8">
+					         			<%= password_field_tag(:password , '' , class: 'form-control') %>
+					         		</div>
+					         	</div>
+					         	<div class="row form-group">
+					        		<div class="col-md-4">
+					         			<strong>Confirm Password: </strong>
+					         		</div>
+					         		<div class="col-md-8">
+					         			<%= password_field_tag(:c_password ,  '' , class: 'form-control') %>
+					         		</div>
+					         	</div>
+					          </div>           
+					        </div>
+					        <div class="modal-footer">
+					          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					          <%= submit_tag("Reset" , class: "btn btn-success" ) %>
+							<% end %>
+					        </div>
+					      </div>
+					      
+					    </div>
+					  </div>
+
+
+					<% end %>
+				</tbody> 
+			</table> 
+		</div> 
+	</section> 
+</section>
+</section>
+</section>
+
+<script>
+  $(function () {
+    $("#users").DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+
+    $(".dataTables_length").addClass("col-md-6");
+  });
+
+ 
+
+</script>

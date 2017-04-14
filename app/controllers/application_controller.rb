@@ -27,4 +27,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def is_admin
+    if session[:admin].present?
+      unless u = Admin.find_by_email(session[:admin])
+        redirect_to admin_signin_page_path
+      end
+      @admin = u
+    else
+      redirect_to admin_signin_page_path
+    end
+  end
+
 end

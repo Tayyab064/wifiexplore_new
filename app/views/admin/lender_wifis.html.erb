@@ -1,0 +1,256 @@
+<section > 
+<section class="vbox"> 
+<section class="scrollable padder"> 
+	<div class="row"> 
+		<div class="col-md-6">
+			<section> 
+				<header class="font-bold padder-v" style="text-align: center;"> 
+					 Wifi Speed
+				</header> 
+				<div class="panel-body flot-legend"> 
+					<div id="flot-pie-donut" style="height:250px"></div> 
+				</div> 
+			</section>
+		</div>
+		<div class="col-md-6">
+			<section> 
+				<header class="font-bold padder-v" style="text-align: center;"> 
+					 Wifi Earning
+				</header> 
+				<div class="panel-body flot-legend"> 
+					<div id="flot-pie-donut-earn" style="height:250px"></div> 
+				</div> 
+			</section>
+		</div>
+	</div>
+
+
+
+	<div class="m-b-md"> 
+		<!-- <h3 class="m-b-none">Wifis</h3> --> 
+	</div> 
+	<section class="panel panel-default"> 
+		<header class="panel-heading"> <%= @wifis.count > 0 ? @wifis.first.lender.name : '' %> Wifis 
+			<i class="fa fa-info-sign text-muted" ></i> 
+		</header> 
+		<div class="table-responsive"> 
+			<table id='wifis' class="table table-striped m-b-none" data-ride="datatables"> 
+				<thead> 
+					<tr> 
+						<th width="15%">Name</th> 
+						<th width="20%">Address</th> 
+						<th width="10%">Latitude</th> 
+						<th width="10%">Longitude</th> 
+						<th width="20%">Price per 100MB</th>
+						<th width="15%">Speed</th>
+						<th width="10%">Block</th> 
+					</tr> 
+				</thead> 
+				<tbody> 
+					<% @wifis.each do |wifi| %>
+					<tr>
+						<td><%= wifi.name %></td>
+						<td><%= wifi.address %></td>
+						<td><%= wifi.latitude %></td>
+						<td><%= wifi.longitude %></td>
+						<td><%= wifi.price %></td>
+						<td><%= (wifi.avg_speed/1024).round(2) %> MB</td>
+						<td><%= wifi.blocked ? link_to('Blocked' , unblock_wifi_path(wifi.id) , class: 'btn btn-danger') : link_to('Block' , block_wifi_path(wifi.id) , class: 'btn btn-success') %>
+						</td>
+					</tr>
+					<% end %>
+				</tbody> 
+			</table> 
+		</div> 
+	</section> 
+</section>
+</section>
+</section>
+
+
+
+
+<script src="js/charts/flot/jquery.flot.min.js"></script> 
+<script src="js/charts/flot/jquery.flot.tooltip.min.js"></script> 
+<script src="js/charts/flot/jquery.flot.spline.js"></script> 
+<script src="js/charts/flot/jquery.flot.pie.min.js"></script> 
+<script src="js/charts/flot/jquery.flot.resize.js"></script> 
+<script src="js/charts/flot/jquery.flot.grow.js"></script> 
+<script src="js/charts/flot/demo.js"></script> 
+
+<script>
+  $(function () {
+    $("#wifis").DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+
+    $(".dataTables_length").addClass("col-md-6");
+
+
+   var less2 = 0 ;
+   var less4 = 0 ;
+   var less8 = 0 ;
+   var less16 = 0 ;
+   var great16 = 0 ;
+
+  	<% @wifis.each do |wifi| %>
+  		if(<%= wifi.avg_speed.present? %>){
+	  		if(<%= wifi.avg_speed %> <= 2048){
+	  			less2 = less2 + 1;
+	  		}else
+	  		if(<%= wifi.avg_speed %> <= 4096){
+	  			less4 = less4 + 1;
+	  		}else
+	  		if(<%= wifi.avg_speed %> <= 8192){
+	  			less8 = less8 + 1;
+	  		}else
+	  		if(<%= wifi.avg_speed %> <= 16384){
+	  			less16 = less16 +1;
+	  		}else
+	  		if(<%= wifi.avg_speed %> > 16384){
+	  			great16 = great16 + 1 ;
+	  		}
+	  	}
+	<% end %>
+
+	var da = [
+	    {
+	      label: "2 MB",
+	      data: less2
+	    },    
+	    {
+	      label: "4 MB",
+	      data: less4
+	    },
+	    {
+	      label: "8 MB",
+	      data: less8
+	    },
+	    {
+	      label: "16 MB",
+	      data: less16
+	    },
+	    {
+	      label: "More than 16 MB",
+	      data: great16
+	    }
+	  ];
+
+    $("#flot-pie-donut").length && $.plot($("#flot-pie-donut"), da, {
+    series: {
+      pie: {
+        innerRadius: 0.4,
+        show: true,
+        stroke: {
+          width: 0
+        },
+        label: {
+          show: true,
+          threshold: 0.05
+        },
+
+      }
+    },
+    colors: ["#65b5c2","#4da7c1","#3993bb","#2e7bad","#23649e"],
+    grid: {
+        hoverable: true,
+        clickable: false
+    },
+    tooltip: true,
+    tooltipOpts: {
+      content: "%s: %p.0%"
+    }
+  });
+
+
+
+
+
+   var less2_e = 0 ;
+   var less4_e = 0 ;
+   var less8_e = 0 ;
+   var less16_e = 0 ;
+   var great16_e = 0 ;
+
+  	<% @wifis.each do |wifi| %>
+
+  		<% tot_wif_earn = 0 %>
+  		<% wifi.connections.each do |con| %>
+  			<% tot_wif_earn = tot_wif_earn + con.total_bill %>
+  		<% end %>
+
+  		if(<%= tot_wif_earn %> <= 1000){
+  			less2_e = less2_e + 1;
+  		}else
+  		if(<%= tot_wif_earn %> <= 2000){
+  			less4_e = less4_e + 1;
+  		}else
+  		if(<%= tot_wif_earn %> <= 3000){
+  			less8_e = less8_e + 1;
+  		}else
+  		if(<%= tot_wif_earn %> <= 4000){
+  			less16_e = less16_e +1;
+  		}else
+  		if(<%= tot_wif_earn %> > 4000){
+  			great16_e = great16_e + 1 ;
+  		}
+	<% end %>
+
+	var da = [
+	    {
+	      label: "1 K",
+	      data: less2_e
+	    },    
+	    {
+	      label: "2 K",
+	      data: less4_e
+	    },
+	    {
+	      label: "3 K",
+	      data: less8_e
+	    },
+	    {
+	      label: "4 K",
+	      data: less16_e
+	    },
+	    {
+	      label: "More than 4 K",
+	      data: great16_e
+	    }
+	  ];
+
+    $("#flot-pie-donut-earn").length && $.plot($("#flot-pie-donut-earn"), da, {
+    series: {
+      pie: {
+        innerRadius: 0.4,
+        show: true,
+        stroke: {
+          width: 0
+        },
+        label: {
+          show: true,
+          threshold: 0.05
+        },
+
+      }
+    },
+    colors: ["#1aaeae","#1aae9a","#1aae8c","#1aae7e","#1aae6a"],
+    grid: {
+        hoverable: true,
+        clickable: false
+    },
+    tooltip: true,
+    tooltipOpts: {
+      content: "%s: %p.0%"
+    }
+  });
+
+
+
+  });
+</script>

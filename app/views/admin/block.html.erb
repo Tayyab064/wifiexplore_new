@@ -1,0 +1,196 @@
+<style type="text/css">
+	.nav-tabs>li{
+		width: 50%;
+	}
+	#butt{
+		margin-bottom: 0px;
+	}
+	
+</style>
+<section > 
+<section class="vbox"> 
+<section class="scrollable padder"> 
+	<div class="row">
+		<div class="col-md-6"> 
+			<section class="panel panel-default"> 
+				<header class="panel-heading"> Blocked Wifi's </header> 
+				<div class="panel-body text-center"> 
+					<h4><%= @wifi_block.count  %><small> </small></h4> 
+					<% wi = ((@wifi_block.count.to_f / @wifi.count.to_f ) * 100).round(2) %>
+					<small class="text-muted block">No of blocked wifi's</small> 
+					<div class="inline"> <!-- data-track-color="#f6fc33"  -->
+						<div class="easypiechart" data-percent="<%= wi %>"  data-bar-color="#fcc633" data-line-width="16" data-loop="false" data-size="188"> 
+							<div> 
+								<span class="h2 m-l-sm step"><%= wi %></span>% 
+								<!-- <div class="text text-sm">new</div> --> 
+							</div> 
+						</div> 
+					</div> 
+				</div> 
+				<div class="panel-footer">
+					<small>% of blocked Wifi</small>
+				</div> 
+			</section> 
+		</div>
+		<div class="col-md-6">
+			<section class="panel panel-default"> 
+				<header class="panel-heading "> Blocked User's </header> 
+				<div class="panel-body text-center"> 
+					<h4><%=  @user_block.count %><small></small></h4> 
+					<% us = ((@user_block.count.to_f / @user.count.to_f) * 100).round(2) %>
+					<small class="text-muted block">No of blocked user's</small> 
+					<div class="inline"> 
+						<div class="easypiechart" data-percent="<%= us %>" data-line-width="10" data-track-color="#cef9ff" data-bar-color="#1ccc88" data-scale-color="#fff" data-size="188" data-line-cap='butt'> 
+							<div> 
+								<span class="h2 m-l-sm step"><%= us %></span>% 
+								<!-- <div class="text text-sm">new visits</div>  -->
+							</div> 
+						</div> 
+					</div> 
+				</div> 
+				<div class="panel-footer">
+					<small>% of blocked User</small>
+				</div> 
+			</section>
+		</div>
+	</div>
+	<div class="row" >
+		<div class="col-md-12">
+			<section class="panel panel-default" id="butt"> 
+				<header class="panel-heading font-bold">
+					<ul class="nav nav-tabs">
+					    <li class="active" id='wifi_tab'><a>Wifi</a></li>
+					    <li id='user_tab'><a >User</a></li>
+					</ul>
+				</header> 
+			</section>
+			<section class="panel panel-default hidden" id='wif_chart'> 
+				<!-- <header class="panel-heading font-bold">Earning</header>  -->
+				<div class="table-responsive"> 
+					<table id='wifi_t' class="table table-striped m-b-none" data-ride="datatables"> 
+						<thead> 
+							<tr> 
+								<th >Name</th> 
+								<th >Email</th> 		 
+								<th >Mobile Number</th> 
+								<th>Unblock</th>
+							</tr> 
+						</thead> 
+						<tbody> 
+							<% @user_block.each do |user| %>
+								<tr>
+									<td><%= user.name %></td>
+									<td><%= user.email %></td>
+									<td><%= user.mobile_number %></td>
+									<td><%= link_to('Blocked' , unblock_user_path(user.id) , class: 'btn btn-danger') %></td>
+								</tr>
+							<% end %>
+						</tbody> 
+					</table> 
+				</div> 
+			</section>
+
+			<section class="panel panel-default" id="wif_table"> 
+				<!-- <header class="panel-heading font-bold"> Earning
+					<i class="fa fa-info-sign text-muted" ></i> 
+				</header>  -->
+				<div class="table-responsive"> 
+					<table id='user_t' class="table table-striped m-b-none" data-ride="datatables"> 
+						<thead> 
+							<tr> 
+								<th >Wifi Name</th> 
+								<th >Owner</th>
+								<th >Total Earning</th> 		 
+								<th >No of connections</th>
+								<th>Unblock</th>
+							</tr> 
+						</thead> 
+						<tbody> 
+							<% @wifi_block.each do |wifi| %>
+								<% if wifi.lender.present? %>
+									<% use = wifi.lender.name %>
+								<% else %>
+									<% use = 'Name Missing' %>
+								<% end %>
+
+								<% earn = 0  %>
+								<% wifi.connections.each do |conn| %>
+									<% earn = earn + conn.total_bill %>
+								<% end %>
+							<tr>
+								<td><%= wifi.name %></td>
+								<td><%= use %></td>
+								<td><%= (earn/1000).round(2) %> K</td>
+								<td><%= wifi.connections.count %></td>
+								<td><%= link_to('Blocked' , unblock_wifi_path(wifi.id) , class: 'btn btn-danger') %></td>
+							</tr>
+							<% end %>
+						</tbody> 
+					</table> 
+				</div> 
+			</section>
+		</div>
+	</div>
+	<div class="m-b-md"> 
+		<!-- <h3 class="m-b-none">Users</h3>  -->
+	</div>  
+</section>
+</section>
+</section>
+
+
+<script>
+  $(function () {
+    $("#user_t").DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+
+    $("#wifi_t").DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+
+    $(".dataTables_length").addClass("col-md-6");
+
+    /*$("#butt").click(function(){
+        $("#wif_table").toggle();
+        $("#wif_chart").toggle();
+    });*/
+
+    $("#user_tab").click(function(){
+        $("#wif_table").addClass("hidden");
+        $("#wif_chart").removeClass("hidden");
+        $("#wifi_tab").removeClass("active")
+        $("#user_tab").addClass("active");
+    });
+
+    $("#wifi_tab").click(function(){
+    	$("#wif_chart").addClass("hidden");
+        $("#wif_table").removeClass("hidden");
+        $("#user_tab").removeClass("active");
+        $("#wifi_tab").addClass("active");
+    });
+  });
+</script>
+
+<script src="js/charts/sparkline/jquery.sparkline.min.js"></script>
+
+ <script src="js/charts/easypiechart/jquery.easy-pie-chart.js"></script> 
+
+ <script src="js/charts/flot/jquery.flot.min.js"></script> 
+ <script src="js/charts/flot/jquery.flot.tooltip.min.js"></script> 
+ <script src="js/charts/flot/jquery.flot.resize.js"></script> 
+ <script src="js/charts/flot/jquery.flot.orderBars.js"></script> 
+ <script src="js/charts/flot/jquery.flot.pie.min.js"></script> 
+ <script src="js/charts/flot/jquery.flot.grow.js"></script> 
+ <script src="js/charts/flot/demo.js"></script> 
+ <script src="js/app.plugin.js"></script>

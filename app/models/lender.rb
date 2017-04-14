@@ -14,6 +14,7 @@ class Lender < ApplicationRecord
 	validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, on: :create }
 
 	has_many :wifis , dependent: :destroy
+	has_many :withdraws , dependent: :destroy
 
 
 	private
