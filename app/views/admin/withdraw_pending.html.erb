@@ -1,83 +1,46 @@
-<style type="text/css">
-	#butt_s{
-		margin-bottom: 0px;
-	}
-</style>
-<style>
-.loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid blue;
-  border-bottom: 16px solid blue;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
-}
-
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-</style>
-<section > 
-<section class="vbox"> 
-<section class="scrollable padder"> 
-	<div class="row" >
-		<div class="col-md-12">
-			<section class="panel panel-default" id="butt_s"> 
-				<header class="panel-heading font-bold">Withdraw Pending</header> 
-			</section>
-			<!-- <div id='spin_load'><img src="radio.svg"></div> -->
-			<div class="loader" style="display: none;"></div>
-			<section class="panel panel-default"> 
-				<!-- <header class="panel-heading font-bold">Earning</header>  -->
-				<div class="table-responsive"> 
-					<table id='withdraw_pending' class="table table-striped m-b-none" data-ride="datatables"> 
-						<thead> 
-							<tr> 
-								<th>Time</th>
-								<th>Amount</th>
-								<th>Lender</th>
-								<th>Transfer</th>
-							</tr> 
-						</thead> 
-						<tbody> 
-							<% @withdraw.each do |withdraw| %>
-								
-								<tr>
-									<td><%= withdraw.created_at.strftime('%I:%M%p %d/%m/%Y') %></td>
-									<td><%= withdraw.amount %></td>
-									<td><%= withdraw.lender.present? ? withdraw.lender.email : 'Lender'%></td>
-									<td><%= link_to('Transfered' , mark_withdraw_pending_path(withdraw.id) , class: 'btn btn-danger') %></td>
-								</tr>
-							<% end %>						
-						</tbody> 
-					</table> 
-				</div> 
-			</section>
-		</div>
-	</div>  
-</section>
-</section>
-</section>
-
-<script>
-  $(function () {
-    $("#withdraw_pending").DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true
-    });
-
-    $(".dataTables_length").addClass("col-md-6");
-  });
-</script>
+<div class="page-content-wrapper ">
+<!-- START PAGE CONTENT -->
+  <div class="content">
+    <!-- START CONTAINER FLUID -->
+    <div class="container-fluid container-fixed-lg bg-white">
+      <!-- START PANEL -->
+      <div class="panel panel-transparent">
+        <div class="panel-heading">
+          <div class="panel-title">Withdraw Pending
+          </div>
+          <div class="pull-right">
+            <div class="col-xs-12">
+              <input type="text" id="search-table" class="form-control pull-right" placeholder="Search">
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="panel-body">
+          <table class="table table-hover demo-table-search" id="tableWithSearch">
+            <thead> 
+				<tr> 
+					<th>Time</th>
+					<th>Amount</th>
+					<th>Lender</th>
+					<th>Transfer</th>
+				</tr> 
+			</thead> 
+			<tbody> 
+				<% @withdraw.each do |withdraw| %>
+					
+					<tr>
+						<td><%= withdraw.created_at.strftime('%I:%M%p %d/%m/%Y') %></td>
+						<td><%= withdraw.amount %></td>
+						<td><%= withdraw.lender.present? ? withdraw.lender.email : 'Lender'%></td>
+						<td><%= link_to('Transfered' , mark_withdraw_pending_path(withdraw.id) , class: 'btn btn-danger') %></td>
+					</tr>
+				<% end %>						
+			</tbody>  
+          </table>
+        </div>
+      </div>
+      <!-- END PANEL -->
+    </div>
+    <!-- END CONTAINER FLUID -->
+  </div>
+</div>

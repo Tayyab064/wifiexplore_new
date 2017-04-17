@@ -1,107 +1,70 @@
-<style type="text/css">
-	#butt_s{
-		margin-bottom: 0px;
-	}
-</style>
-<style>
-.loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid blue;
-  border-bottom: 16px solid blue;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
-}
-
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-</style>
-<section > 
-<section class="vbox"> 
-<section class="scrollable padder"> 
-	<div class="row" >
-		<div class="col-md-12">
-			<section class="panel panel-default" id="butt_s"> 
-				<header class="panel-heading font-bold">Stripe</header> 
-			</section>
-			<!-- <div id='spin_load'><img src="radio.svg"></div> -->
-			<div class="loader" style="display: none;"></div>
-			<section class="panel panel-default"> 
-				<!-- <header class="panel-heading font-bold">Earning</header>  -->
-				<div class="table-responsive"> 
-					<table id='stripe_add' class="table table-striped m-b-none" data-ride="datatables"> 
-						<thead> 
-							<tr> 
-								<th >Charge ID</th> 
-								<th >Amount</th>
-								<th>Amount Refunded</th>
-								<!-- <th >Currency</th> 	 -->	 
-								<th >Wifi</th> 
-								<th>User</th>
-								<th>Status</th>
-								<th>Refund</th>
-							</tr> 
-						</thead> 
-						<tbody> 
-							<% @str.data.each do |stripe| %>
-								<% st = stripe.description.split(' ')[2] %>
-								<% if Connection.exists?(st) %>
-									<% conni = Connection.find(st) %>
-									<% if conni.wifi.present? %>
-										<% wifi_conn = conni.wifi.name %>
-									<% else %>
-										<% wifi_conn = 'Missing' %>
-									<% end %>
-									<% if conni.user.present? %>
-										<% user_conn = conni.user.email %>
-									<% else %>
-										<% user_conn = 'Missing' %>
-									<% end %>
-								<% else %>
-									<% user_conn = 'Missing' %>
-									<% wifi_conn = 'Missing' %>
-								<% end %>
-								<tr>
-									<td><%= stripe.id %></td>
-									<td><%= stripe.amount/100 %></td>
-									<td><%= stripe.amount_refunded/100 %></td>
-									<!-- <td><%= stripe.currency.upcase %></td> -->
-									<td><%= wifi_conn %></td>
-									<td><%= user_conn %></td>
-									<td><%= stripe.status.capitalize %></td>
-									<td><%= link_to('Refund' , refund_stripe_path(stripe.id) , class: 'btn btn-danger') %></td>
-								</tr>
-							<% end %>						
-						</tbody> 
-					</table> 
-				</div> 
-			</section>
-		</div>
-	</div>  
-</section>
-</section>
-</section>
-
-<script>
-  $(function () {
-    $("#stripe_add").DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true
-    });
-
-    $(".dataTables_length").addClass("col-md-6");
-  });
-</script>
+<div class="page-content-wrapper ">
+<!-- START PAGE CONTENT -->
+  <div class="content">
+    <!-- START CONTAINER FLUID -->
+    <div class="container-fluid container-fixed-lg bg-white">
+      <!-- START PANEL -->
+      <div class="panel panel-transparent">
+        <div class="panel-heading">
+          <div class="panel-title">Stripe
+          </div>
+          <div class="pull-right">
+            <div class="col-xs-12">
+              <input type="text" id="search-table" class="form-control pull-right" placeholder="Search">
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="panel-body">
+          <table class="table table-hover demo-table-search" id="tableWithSearch">
+            <thead> 
+				<tr> 
+					<th >Charge ID</th> 
+					<th >Amount</th>
+					<th>Amount Refunded</th>
+					<!-- <th >Currency</th> 	 -->	 
+					<th >Wifi</th> 
+					<th>User</th>
+					<th>Status</th>
+					<th>Refund</th>
+				</tr> 
+			</thead> 
+			<tbody> 
+				<% @str.data.each do |stripe| %>
+					<% st = stripe.description.split(' ')[2] %>
+					<% if Connection.exists?(st) %>
+						<% conni = Connection.find(st) %>
+						<% if conni.wifi.present? %>
+							<% wifi_conn = conni.wifi.name %>
+						<% else %>
+							<% wifi_conn = 'Missing' %>
+						<% end %>
+						<% if conni.user.present? %>
+							<% user_conn = conni.user.email %>
+						<% else %>
+							<% user_conn = 'Missing' %>
+						<% end %>
+					<% else %>
+						<% user_conn = 'Missing' %>
+						<% wifi_conn = 'Missing' %>
+					<% end %>
+					<tr>
+						<td><%= stripe.id %></td>
+						<td><%= stripe.amount/100 %></td>
+						<td><%= stripe.amount_refunded/100 %></td>
+						<!-- <td><%= stripe.currency.upcase %></td> -->
+						<td><%= wifi_conn %></td>
+						<td><%= user_conn %></td>
+						<td><%= stripe.status.capitalize %></td>
+						<td><%= link_to('Refund' , refund_stripe_path(stripe.id) , class: 'btn btn-danger') %></td>
+					</tr>
+				<% end %>						
+			</tbody>  
+          </table>
+        </div>
+      </div>
+      <!-- END PANEL -->
+    </div>
+    <!-- END CONTAINER FLUID -->
+  </div>
+</div>

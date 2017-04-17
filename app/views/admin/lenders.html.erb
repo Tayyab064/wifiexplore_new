@@ -1,100 +1,91 @@
-<section > 
-<section class="vbox"> 
-<section class="scrollable padder"> 
-	<div class="m-b-md"> 
-		<!-- <h3 class="m-b-none">Users</h3>  -->
-	</div> 
-	<section class="panel panel-default"> 
-		<header class="panel-heading"> Lenders 
-			<i class="fa fa-info-sign text-muted" ></i> 
-		</header> 
-		<div class="table-responsive"> 
-			<table id='users' class="table table-striped m-b-none" data-ride="datatables"> 
-				<thead> 
-					<tr> 
-						<th>Name</th> 
-						<th>Email</th> 
-						<th>Mobile Number</th> 
-						<th>Wifis</th>
-						<th>Action</th>
-					</tr> 
-				</thead> 
-				<tbody> 
-					<% @lender.each do |user| %>
-					<tr>
-					<td><%= user.name %></td>
-						<td><%= user.email %></td>
-						<td><%= user.mobile_number %></td>
-						<td><%= user.wifis.count %></td>
-						<td><%= link_to 'Wifi', lender_wifis_path(user.id) , class: 'btn btn-default' %></td>
-					</tr>
+<div class="page-content-wrapper ">
+<!-- START PAGE CONTENT -->
+  <div class="content">
+    <!-- START CONTAINER FLUID -->
+    <div class="container-fluid container-fixed-lg bg-white">
+      <!-- START PANEL -->
+      <div class="panel panel-transparent">
+        <div class="panel-heading">
+          <div class="panel-title">Lenders
+          </div>
+          <div class="pull-right">
+            <div class="col-xs-12">
+              <input type="text" id="search-table" class="form-control pull-right" placeholder="Search">
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="panel-body">
+          <table class="table table-hover demo-table-search" id="tableWithSearch">
+            <thead> 
+				<tr> 
+					<th>Name</th> 
+					<th>Email</th> 
+					<th>Mobile Number</th> 
+					<th>Wifis</th>
+					<th>Action</th>
+				</tr> 
+			</thead> 
+			<tbody> 
+				<% @lender.each do |user| %>
+				<tr>
+				<td><%= user.name %></td>
+					<td><%= user.email %></td>
+					<td><%= user.mobile_number %></td>
+					<td><%= user.wifis.count %></td>
+					<td><%= link_to 'Wifi', lender_wifis_path(user.id) , class: 'btn btn-default' %></td>
+				</tr>
 
 
-					<div class="modal fade" id="user_reset_<%= user.id%>" role="dialog">
-					    <div class="modal-dialog">
-					    
-					      <!-- Modal content-->
-					      <div class="modal-content">
-					        <div class="modal-header">
-					          <button type="button" class="close" data-dismiss="modal">&times;</button>
-					          <h4 class="modal-title" style="text-align: center;"><%= user.email %></h4>
-					        </div>
-					        <div class="modal-body">
-					          <div class="container-fluid bd-example-row">
-					          
-					          <%= form_tag(reset_password_admin_path(user.id), method: "post") do %>
-					         	<div class="row form-group" >
-					        		<div class="col-md-4">
-					         			<strong>Password: </strong>
-					         		</div>
-					         		<div class="col-md-8">
-					         			<%= password_field_tag(:password , '' , class: 'form-control') %>
-					         		</div>
-					         	</div>
-					         	<div class="row form-group">
-					        		<div class="col-md-4">
-					         			<strong>Confirm Password: </strong>
-					         		</div>
-					         		<div class="col-md-8">
-					         			<%= password_field_tag(:c_password ,  '' , class: 'form-control') %>
-					         		</div>
-					         	</div>
-					          </div>           
-					        </div>
-					        <div class="modal-footer">
-					          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					          <%= submit_tag("Reset" , class: "btn btn-success" ) %>
-							<% end %>
-					        </div>
-					      </div>
-					      
-					    </div>
-					  </div>
+				<div class="modal fade" id="user_reset_<%= user.id%>" role="dialog">
+				    <div class="modal-dialog">
+				    
+				      <!-- Modal content-->
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				          <h4 class="modal-title" style="text-align: center;"><%= user.email %></h4>
+				        </div>
+				        <div class="modal-body">
+				          <div class="container-fluid bd-example-row">
+				          
+				          <%= form_tag(reset_password_admin_path(user.id), method: "post") do %>
+				         	<div class="row form-group" >
+				        		<div class="col-md-4">
+				         			<strong>Password: </strong>
+				         		</div>
+				         		<div class="col-md-8">
+				         			<%= password_field_tag(:password , '' , class: 'form-control') %>
+				         		</div>
+				         	</div>
+				         	<div class="row form-group">
+				        		<div class="col-md-4">
+				         			<strong>Confirm Password: </strong>
+				         		</div>
+				         		<div class="col-md-8">
+				         			<%= password_field_tag(:c_password ,  '' , class: 'form-control') %>
+				         		</div>
+				         	</div>
+				          </div>           
+				        </div>
+				        <div class="modal-footer">
+				          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				          <%= submit_tag("Reset" , class: "btn btn-success" ) %>
+						<% end %>
+				        </div>
+				      </div>
+				      
+				    </div>
+				  </div>
 
 
-					<% end %>
-				</tbody> 
-			</table> 
-		</div> 
-	</section> 
-</section>
-</section>
-</section>
-
-<script>
-  $(function () {
-    $("#users").DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true
-    });
-
-    $(".dataTables_length").addClass("col-md-6");
-  });
-
- 
-
-</script>
+				<% end %>
+			</tbody> 
+          </table>
+        </div>
+      </div>
+      <!-- END PANEL -->
+    </div>
+    <!-- END CONTAINER FLUID -->
+  </div>
+</div>

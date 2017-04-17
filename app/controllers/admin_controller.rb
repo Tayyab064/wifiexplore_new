@@ -1,9 +1,14 @@
 class AdminController < ApplicationController
+	skip_before_action :verify_authenticity_token , only: [:approve_signin]
 	layout 'admin'
     before_action :is_admin, except: [:signin , :approve_signin]
 
     def signin
-		render :layout => false
+    	if session[:admin].present?
+    		redirect_to '/admin/dashboard'
+    	else
+			render :layout => false
+		end
 	end
 
 	def approve_signin
