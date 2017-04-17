@@ -12,4 +12,5 @@ class User < ApplicationRecord
 	validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, on: :create }
 
 	has_many :connections , dependent: :destroy
+	has_many :reports , dependent: :destroy
 end

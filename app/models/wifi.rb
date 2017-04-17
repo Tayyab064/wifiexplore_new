@@ -12,6 +12,7 @@ class Wifi < ApplicationRecord
 	after_validation :reverse_geocode
 
 	has_many :connections , dependent: :destroy
+	has_many :reports , dependent: :destroy
 
 
 	def rating

@@ -66,6 +66,8 @@ Rails.application.routes.draw do
     post 'rest_pass/:id' => 'admin#reset_pass' , as: 'reset_password_admin'
     get 'withdraw/pending/:id' => 'admin#mark_withdraw_pending' , as: 'mark_withdraw_pending'
 
+    get 'reports' => 'admin#reports'
+
     get 'destroy/:id' => 'admin#delete_user' , as: 'user_destroy'
 
     get 'wifis_:id' => 'admin#lender_wifis' , as: 'lender_wifis'

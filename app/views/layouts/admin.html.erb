@@ -466,6 +466,16 @@
 											</li>
 										</ul>
 									</li>
+									<li id='reports_007' class="">
+										<a href="<%= reports_path %>">
+											<span class="pull-right text-muted"> 
+												<i class="i i-circle-sm-o text"></i> 
+												<i class="i i-circle-sm text-active"></i> 
+											</span> 
+											<i class="fa fa-bug icon"> </i> 
+											<span class="font-bold">Report</span> 
+										</a>
+									</li>
 									<li id='block_007' class="">
 										<a href="<%= block_path %>">
 											<span class="pull-right text-muted"> 
@@ -743,6 +753,8 @@
 			$("#withdraw_007").addClass("active");
 		<% elsif request.url.include? "admin/lenders" %>
 			$("#lender_007").addClass("active");
+		<% elsif request.url.include? "admin/reports" %>
+			$("#reports_007").addClass("active");
 		<% end %>
 	</script>
 

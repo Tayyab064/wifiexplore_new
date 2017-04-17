@@ -208,4 +208,8 @@ class AdminController < ApplicationController
 	def lender_wifis
 		@wifis = Wifi.where(lender_id: params[:id])
 	end
+
+	def reports
+		@report = Report.all.order(created_at: 'DESC')
+	end
 end

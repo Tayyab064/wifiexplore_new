@@ -1,0 +1,226 @@
+<section > 
+<section class="vbox"> 
+<section class="scrollable padder"> 
+	<section class="panel panel-default"> 
+		<header class="panel-heading"> Report 
+			<i class="fa fa-info-sign text-muted" ></i> 
+		</header> 
+		<div class="table-responsive"> 
+			<table id='connections' class="table table-striped m-b-none" data-ride="datatables"> 
+				<thead> 
+					<tr> 
+						<th width="50%">Description</th>
+						<th width="25%">Wifi</th> 
+						<th width="25%">User</th> 
+					</tr> 
+				</thead> 
+				<tbody> 
+					<% @report.each do |report| %>
+						<% if report.user.present? %>
+							<% use = report.user.name %>
+						<% else %>
+							<% use = 'Name Missing' %>
+						<% end %>
+
+						<% if report.wifi.present? %>
+							<% wif = report.wifi.name %>
+						<% else %>
+							<% wif = 'Wifi Missing' %>
+						<% end %>
+					<tr>
+						<td><%= report.description %></td>
+						<td><%= link_to wif, "#wif_mod_#{report.wifi_id}", "data-toggle" => "modal" %></td>
+						<td><%= link_to use, "#user_mod_#{report.user_id}", "data-toggle" => "modal" %></td>	
+					</tr>
+
+
+					<!-- Wifi Modal -->
+					  <div class="modal fade" id="wif_mod_<%= report.wifi_id%>" role="dialog">
+					    <div class="modal-dialog">
+					    
+					      <!-- Modal content-->
+					      <div class="modal-content">
+					        <div class="modal-header">
+					          <button type="button" class="close" data-dismiss="modal">&times;</button>
+					          <h4 class="modal-title"><%= wif %></h4>
+					        </div>
+					        <div class="modal-body">
+					          <div class="container-fluid bd-example-row">
+					          <% if report.wifi.present? %>
+					        	<div class="row">
+					        		<div class="col-md-4">
+					         			<strong>Owner: </strong>
+					         		</div>
+					         		<div class="col-md-8">
+					         			<%= report.wifi.lender.email %>
+					         		</div>
+					         	</div>
+					         	<hr>
+					         	<div class="row">
+					        		<div class="col-md-4">
+					         			<strong>Address: </strong>
+					         		</div>
+					         		<div class="col-md-8">
+					         			<%= report.wifi.address %>
+					         		</div>
+					         	</div>
+					         	<hr>
+					         	<div class="row">
+					        		<div class="col-md-4">
+					         			<strong>Latitude: </strong>
+					         		</div>
+					         		<div class="col-md-8">
+					         			<%= report.wifi.latitude %>
+					         		</div>
+					         	</div>
+					         	<hr>
+					         	<div class="row">
+					        		<div class="col-md-4">
+					         			<strong>Longitude: </strong>
+					         		</div>
+					         		<div class="col-md-8">
+					         			<%= report.wifi.longitude %>
+					         		</div>
+					         	</div>
+					         	<hr>
+					         	<div class="row">
+					        		<div class="col-md-4">
+					         			<strong>SSID: </strong>
+					         		</div>
+					         		<div class="col-md-8">
+					         			<%= report.wifi.ssid %>
+					         		</div>
+					         	</div>
+					         	<hr>
+					         	<div class="row">
+					        		<div class="col-md-4">
+					         			<strong>Price Per 100MB: </strong>
+					         		</div>
+					         		<div class="col-md-8">
+					         			<%= report.wifi.price.round(2) %>
+					         		</div>
+					         	</div>
+					         	<hr>
+					         	<div class="row">
+					        		<div class="col-md-4">
+					         			<strong>Speed: </strong>
+					         		</div>
+					         		<div class="col-md-8">
+					         			<%= (report.wifi.avg_speed/1024).round %>MB
+					         		</div>
+					         	</div>
+					          <% else %>
+					          	<div class="row">
+					        		<h4>Wifi not present</h4>
+					         	</div>
+					          <% end %>
+					          </div>           
+					        </div>
+					        <div class="modal-footer">
+					          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					        </div>
+					      </div>
+					      
+					    </div>
+					  </div>
+
+					<!-- User Modal -->
+					  <div class="modal fade" id="user_mod_<%= report.user_id%>" role="dialog">
+					    <div class="modal-dialog">
+					    
+					      <!-- Modal content-->
+					      <div class="modal-content">
+					        <div class="modal-header">
+					          <button type="button" class="close" data-dismiss="modal">&times;</button>
+					          <h4 class="modal-title"><%= use %></h4>
+					        </div>
+					        <div class="modal-body">
+					         	<div class="container-fluid bd-example-row">
+					         	<% if report.user.present? %>
+						        	<div class="row">
+						        		<div class="col-md-4">
+						         			<strong>Name: </strong>
+						         		</div>
+						         		<div class="col-md-8">
+						         			<%= report.user.name %>
+						         		</div>
+						         	</div>
+						         	
+						         	<hr>
+						         	<div class="row">
+						        		<div class="col-md-4">
+						         			<strong>Email: </strong>
+						         		</div>
+						         		<div class="col-md-8">
+						         			<%= report.user.email %>
+						         		</div>
+						         	</div>
+						         	<hr>
+						         	<div class="row">
+						        		<div class="col-md-4">
+						         			<strong>Mobile Number: </strong>
+						         		</div>
+						         		<div class="col-md-8">
+						         			<%= report.user.mobile_number %>
+						         		</div>
+						         	</div>
+						         	<hr>
+						         	<div class="row">
+						        		<div class="col-md-4">
+						         			<strong>Email Verified: </strong>
+						         		</div>
+						         		<div class="col-md-8">
+						         			<%= report.user.email_verified ? 'Yes' : 'No' %>
+						         		</div>
+						         	</div>
+						         	<hr>
+						         	<div class="row">
+						        		<div class="col-md-4">
+						         			<strong>Successfully Terminated: </strong>
+						         		</div>
+						         		<div class="col-md-8">
+						         			<%= report.user.successfully_terminated ? 'Yes' : 'No' %>
+						         		</div>
+						         	</div>
+						         <% else %>
+						         	<div class="row">
+						        		<h4>User not present</h4>
+						         	</div>
+						         <% end %>
+					          </div>        
+					        </div>
+					        <div class="modal-footer">
+					          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					        </div>
+					      </div>
+					      
+					    </div>
+					  </div>
+
+
+					<% end %>
+				</tbody> 
+			</table> 
+		</div> 
+	</section> 
+</section>
+</section>
+</section>
+
+
+<script>
+  $(function () {
+    //$("#connections").DataTable();
+    $('#connections').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+
+    $(".dataTables_length").addClass("col-md-6");
+  });
+</script>
+
