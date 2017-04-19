@@ -1,4 +1,5 @@
 class LenderController < ApplicationController
+	skip_before_action :verify_authenticity_token , only: [:approve_signin]
 	layout 'lender'
     before_action :is_lender , except: [:signin , :approve_signin]
 
@@ -60,14 +61,12 @@ class LenderController < ApplicationController
 
 	def connection
 		@wifi = @lender.wifis
-		@total_earning = 0
-		@download_data = 0
-		@upload_data = 0
-		Connection.where(wifi_id: @wifi.pluck(:id)).order(updated_at: 'DESC').limit(50).each do |conn|
-			@total_earning = @total_earning + conn.total_bill
-			@download_data = @download_data + conn.download_data
-			@upload_data = @upload_data + conn.upload_data
-		end
+
+		conne = Connection.where(wifi_id: @wifi.pluck(:id))
+
+		@connect_count = conne.count
+		@connect_connected = conne.where(disconnected_at: nil).count
+		@connect_disconnected = conne.where.not(disconnected_at: nil).count
 	end
 
 	def earning

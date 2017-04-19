@@ -1,438 +1,864 @@
-<link rel="stylesheet" href="../admin/js/jvectormap/jquery-jvectormap-1.2.2.css" type="text/css" />
-<style type="text/css">
-	.alert{
-		margin-bottom: 0px;
-		font-size: 13px;
-	}
-</style>
-<section > 
-				<section class="vbox"> 
-					<section class="scrollable padder"> 
-						<section class="row m-b-md"> 
-							<div class="col-sm-6"> 
-								<h3 class="m-b-xs text-black">Dashboard</h3> 
-								<small>Welcome back</small> 
-							</div> 
-							<div class="col-sm-6 text-right text-left-xs m-t-md"> 
-								<div class = "col-sm-6 col-sm-offset-6 alert alert-info" style="text-align: center;">
-									<strong><i class="i i-users2"></i> Connected Users: </strong>
-									<%= @connected_user > 1000 ? (@connected_user/1000).round.to_s+' K' : @connected_user %>
-								</div>
-							</div> 
-						</section> 
-						<div class="row"> 
-							<div class="col-sm-6"> 
-								<div class="panel b-a"> 
-									<div class="row m-n"> 
-										<div class="col-md-6 b-b"> 
-											<a class="block padder-v hover" href="#"> 
-												<span class="i-s i-s-2x pull-left m-r-sm"> 
-													<i class="i i-hexagon2 i-s-base text-success-lt hover-rotate"></i> 
-													<i class="i i-signal i-sm text-white"></i> 
-												</span> 
-												<span class="clear">
-													<span class="h3 block m-t-xs text-success"><%= @wifis.count %></span>
-													<small class="text-muted text-u-c">Wifi</small> 
-												</span> 
-											</a> 
-										</div> 
-										<div class="col-md-6 b-b b-r"> 
-											<a class="block padder-v hover" href="#"> 
-												<span class="i-s i-s-2x pull-left m-r-sm"> 
-													<i class="i i-hexagon2 i-s-base text-info hover-rotate"></i> 
-													<i class="i i-feed i-sm text-white"></i> 
-												</span> 
-												<span class="clear"> 
-													<span class="h3 block m-t-xs text-info"><%= @connections %> 
-														<span class="text-sm"></span>
-													</span> 
-													<small class="text-muted text-u-c">Connection</small> 
-												</span> 
-											</a> 
-										</div> 
-										<div class="col-md-6 b-b"> 
-											<a class="block padder-v hover" href="#"> 
-												<span class="i-s i-s-2x pull-left m-r-sm"> 
-													<i class="i i-hexagon2 i-s-base text-primary hover-rotate"></i> 
-													<i class="fa fa-dollar i-sm text-white"></i> 
-												</span> 
-												<span class="clear"> 
-													<span class="h3 block m-t-xs text-primary"><%= (@total_earning/1000).round(2) %> K</span> 
-													<small class="text-muted text-u-c">Total Transaction</small> 
-												</span> 
-											</a> 
-										</div> 
-									</div> 
-								</div> 
-							</div> 
-							<div class="col-md-3 col-sm-6"> 
-								<div class="panel b-a"> 
-									<div class="panel-heading no-border bg-primary lt text-center"> 
-										<a > 
-											<i class="fa fa-dollar fa fa-3x m-t m-b text-white"></i> 
-										</a> 
-									</div> 
-									<div class="padder-v text-center clearfix">
-										<div class="col-xs-12"> 
-											<div class="h3 font-bold"><%= (@total_earning/1000).round %> K</div> 
-											<small class="text-muted">Transaction</small> 
-										</div>  
-									</div> 
-								</div> 
-							</div> 
-							<div class="col-md-3 col-sm-6"> 
-								<div class="panel b-a"> 
-									<div class="panel-heading no-border bg-info lter text-center"> 
-										<a > 
-											<i class="i i-download2 fa fa-3x m-t m-b text-white"></i>
-										</a> 
-									</div> 
-									<div class="padder-v text-center clearfix"> 
-										<div class="col-xs-12"> 
-											<div class="h3 font-bold"><%= ((@download_data + @upload_data)/1024).round(2) %>
-												<small class="text-muted"> GB</small>
-											</div> 
-											<small class="text-muted">Data Usage</small> 
-										</div> 
-									</div> 
-								</div> 
-							</div> 
-							<div class="col-sm-3 hide"> 
-								<section class="panel b-a"> 
-									<header class="panel-heading b-b b-light"> 
-										<ul class="nav nav-pills pull-right"> 
-											<li> 
-												<a href="ajax.pie.html" class="text-muted" data-bjax data-target="#b-c"> 
-													<i class="i i-cycle"></i> 
-												</a> 
-											</li> 
-											<li> 
-												<a href="index.html#" class="panel-toggle text-muted"> 
-													<i class="i i-plus text-active"></i> 
-													<i class="i i-minus text"></i> 
-												</a> 
-											</li> 
-										</ul> Connection 
-									</header> 
-									<div class="panel-body text-center bg-light lter" id="b-c"> 
-										<div class="easypiechart inline m-b m-t" data-percent="60" data-line-width="4" data-bar-Color="#23aa8c" data-track-Color="#c5d1da" data-color="#2a3844" data-scale-Color="false" data-size="120" data-line-cap='butt' data-animate="2000"> 
-											<div> 
-												<span class="h2 m-l-sm step"></span>% 
-												<div class="text text-xs">completed</div> 
-											</div> 
-										</div> 
-									</div> 
-								</section>
-							 </div> 
-						</div> 
-						<div class="row bg-light dk m-b"> 
-						<div class="col-md-12 dker">
-							 	<div class="panel-heading b-b">World Map</div> 
-							 	<div class="panel-body"> 
-							 		<div class="h3 m-b font-thin">Registered Wifi around the globe</div> 
-							 		</p> 
-							 		<div class="row"> 
-							 			<div class="col-sm-12"> 
-							 				<div id="world_map" style="height:350px;"> </div> 
-							 				<div class="hidden m-t-xl m-b clearfix"> 
-							 					<i class="i i-local i-2x text-info pull-left m-r m-l m-t-xs"></i> 
-							 					<div class="clear text-sm"> Countries distinguish between metropolitan (homeland) and independent and semi-independent portions of sovereign states. </div> 
-							 				</div> 
-							 			</div> 
-							 			<div class="hidden col-sm-4"> 
-							 				<div class="h4 m-b font-thin">Statistics</div> 
-							 				<p class="m-b-xs">Population growth</p> 
-							 				<div class="progress progress-xs"> 
-							 					<div class="progress-bar bg-primary" data-toggle="tooltip" data-original-title="80%" style="width: 80%"></div> 
-							 				</div> 
-							 				<p class="m-b-xs">Desertification</p> 
-							 				<div class="progress progress-xs"> 
-							 					<div class="progress-bar bg-success" data-toggle="tooltip" data-original-title="60%" style="width: 60%"></div> 
-							 				</div> 
-							 				<p class="m-b-xs">Natural Disasters</p> 
-							 				<div class="progress progress-xs"> 
-							 					<div class="progress-bar bg-warning" data-toggle="tooltip" data-original-title="70%" style="width: 70%"></div> 
-							 				</div> 
-							 				<p class="m-b-xs">World Forest</p> 
-							 				<div class="progress progress-xs"> 
-							 					<div class="progress-bar bg-dark lter" data-toggle="tooltip" data-original-title="50%" style="width: 50%"></div> 
-							 				</div> 
-							 			</div> 
-							 		</div> 
-							 	</div> 
-							 </div>
-						</div> 
-						
-					</section> 
-				</section> 
-			</section> 
-			<!-- side content --> 
-			<aside class="aside-md bg-black hide" id="sidebar"> 
-				<section class="vbox animated fadeInRight"> 
-					<section class="scrollable"> 
-						<div class="wrapper">
-							<strong>Live feed</strong>
-						</div> 
-						<ul class="list-group no-bg no-borders auto"> 
-							<li class="list-group-item"> 
-								<span class="fa-stack pull-left m-r-sm"> 
-									<i class="fa fa-circle fa-stack-2x text-success"></i> 
-									<i class="fa fa-reply fa-stack-1x text-white"></i> 
-								</span> 
-								<span class="clear"> 
-									<a href="index.html#">Goody@gmail.com</a> sent your email 
-									<small class="icon-muted">13 minutes ago</small> 
-								</span> 
-							</li> 
-							<li class="list-group-item"> 
-								<span class="fa-stack pull-left m-r-sm"> 
-									<i class="fa fa-circle fa-stack-2x text-danger"></i> 
-									<i class="fa fa-file-o fa-stack-1x text-white"></i> 
-								</span> 
-								<span class="clear"> 
-									<a href="index.html#">Mide@live.com</a> invite you to join a meeting 
-									<small class="icon-muted">20 minutes ago</small> 
-								</span> 
-							</li> 
-							<li class="list-group-item"> 
-								<span class="fa-stack pull-left m-r-sm"> 
-									<i class="fa fa-circle fa-stack-2x text-info"></i> 
-									<i class="fa fa-map-marker fa-stack-1x text-white"></i> 
-								</span> 
-								<span class="clear"> 
-									<a href="index.html#">Geoge@yahoo.com</a> is online 
-									<small class="icon-muted">1 hour ago</small> 
-								</span> 
-							</li> 
-							<li class="list-group-item"> 
-								<span class="fa-stack pull-left m-r-sm"> 
-									<i class="fa fa-circle fa-stack-2x text-primary"></i> 
-									<i class="fa fa-info fa-stack-1x text-white"></i> 
-								</span> 
-								<span class="clear"> 
-									<a href="index.html#"><strong>Admin</strong></a> post a info 
-									<small class="icon-muted">1 day ago</small> 
-								</span> 
-							</li> 
-						</ul> 
-						<div class="wrapper"><strong>Friends</strong></div>
-						<ul class="list-group no-bg no-borders auto"> 
-							<li class="list-group-item"> 
-								<div class="media"> 
-									<span class="pull-left thumb-sm avatar"> 
-										<img src="images/a3.png" alt="..." class="img-circle"> 
-										<i class="on b-black bottom"></i> 
-									</span> 
-									<div class="media-body"> 
-										<div>
-											<a href="index.html#">Chris Fox</a>
-										</div> 
-										<small class="text-muted">about 2 minutes ago</small> 
-									</div> 
-								</div> 
-							</li> 
-							<li class="list-group-item"> 
-								<div class="media"> 
-									<span class="pull-left thumb-sm avatar"> 
-										<img src="images/a2.png" alt="..."> 
-										<i class="on b-black bottom"></i> 
-									</span> 
-									<div class="media-body"> 
-										<div>
-											<a href="index.html#">Amanda Conlan</a>
-										</div> 
-										<small class="text-muted">about 2 hours ago</small> 
-									</div> 
-								</div> 
-							</li> 
-							<li class="list-group-item"> 
-								<div class="media"> 
-									<span class="pull-left thumb-sm avatar"> 
-										<img src="images/a1.png" alt="..."> 
-										<i class="busy b-black bottom"></i> 
-									</span> 
-									<div class="media-body"> 
-										<div>
-											<a href="index.html#">Dan Doorack</a>
-										</div> 
-										<small class="text-muted">3 days ago</small> 
-									</div> 
-								</div> 
-							</li> 
-							<li class="list-group-item"> 
-								<div class="media"> 
-									<span class="pull-left thumb-sm avatar"> 
-										<img src="images/a0.png" alt="..."> 
-										<i class="away b-black bottom"></i> 
-									</span> 
-									<div class="media-body"> 
-										<div>
-											<a href="index.html#">Lauren Taylor</a>
-										</div> 
-										<small class="text-muted">about 2 minutes ago</small> 
-									</div> 
-								</div> 
-							</li> 
-						</ul> 
-					</section> 
-				</section> 
-			</aside> 
-			<!-- / side content --> 
-
-
-
-<script src="../admin/js/charts/flot/jquery.flot.min.js"></script> 
-<script src="../admin/js/charts/flot/jquery.flot.tooltip.min.js"></script> 
-<script src="../admin/js/charts/flot/jquery.flot.spline.js"></script> 
-<script src="../admin/js/charts/flot/jquery.flot.pie.min.js"></script> 
-<script src="../admin/js/charts/flot/jquery.flot.resize.js"></script> 
-<script src="../admin/js/charts/flot/jquery.flot.grow.js"></script> 
-<script src="../admin/js/charts/flot/demo.js"></script> 
-
-
-<!-- vector map -->
-<script src="../admin/js/jvectormap/jquery-jvectormap-1.2.2.min.js"></script> 
-<script src="../admin/js/jvectormap/jquery-jvectormap-world-mill-en.js"></script> 
-<script src="../admin/js/jvectormap/jquery-jvectormap-us-aea-en.js"></script> 
-<script src="../admin/js/jvectormap/demo.js"></script>
-
-
-
-<script type="text/javascript">
-  var mas = [];
-  <% @wifis.each do |wifi| %>
-	mas.push({latLng: [<%= wifi.latitude %>, <%= wifi.longitude %>], name: '<%= wifi.name %>'});
-  <% end %>
-
-  $('#world_map').vectorMap({
-      map: 'world_mill_en',
-      normalizeFunction: 'polynomial',
-      backgroundColor: '#fff',            
-      regionStyle: {
-        initial: {
-          fill: '#36424f'
-        },
-       hover: {
-          fill: '#177bbb'
-        },
-      },
-      markerStyle: {
-        initial: {
-          fill: '#1ccc88',
-          stroke: '#fff'
-        }
-      },
-      markers: mas
-    });
-</script>
-
-
-<div class="hidden">
-
-							<div class="col-md-6 dker"> 
-								<section> 
-									<header class="font-bold padder-v"> 
-										<!-- <div class="pull-right"> 
-											<div class="btn-group"> 
-												<button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle">
-													<span class="dropdown-label">Week</span> 
-													<span class="caret"></span> 
-												</button> 
-												<ul class="dropdown-menu dropdown-select"> 
-													<li>
-														<a href="index.html#">
-															<input type="radio" name="b">Month
-														</a>
-													</li> 
-													<li>
-														<a href="index.html#">
-															<input type="radio" name="b">Week
-														</a>
-													</li> 
-													<li>
-														<a href="index.html#">
-															<input type="radio" name="b">Day
-														</a>
-													</li> 
-												</ul> 
-											</div> 
-											<a href="index.html#" class="btn btn-default btn-icon btn-rounded btn-sm">Go</a> 
-										</div> --> Data Usage
-									</header> 
-									<div class="panel-body"> 
-										<div id="flot-sp1ine" style="height:210px"></div> 
-									</div> 
-									<div class="row text-center no-gutter"> 
-										<div class="col-xs-6"> 
-											<span class="h4 font-bold m-t block"><%= (@download_data/1024).round(2) %> GB</span> 
-											<small class="text-muted m-b block">Download Data</small> 
-										</div> 
-										<!-- <div class="col-xs-3"> 
-											<span class="h4 font-bold m-t block"><%= @wifis.count %></span> 
-											<small class="text-muted m-b block">Wifis</small> 
-										</div> 
-										<div class="col-xs-3"> 
-											<span class="h4 font-bold m-t block"><%= @connections %></span> 
-											<small class="text-muted m-b block">Connections</small> 
-										</div>  -->
-										<div class="col-xs-6"> 
-											<span class="h4 font-bold m-t block"><%= (@upload_data/1024).round(2) %> GB</span> 
-											<small class="text-muted m-b block">Upload Data</small> 
-										</div> 
-									</div> 
-								</section> 
-							</div> 
-							<div class="col-md-6"> 
-								<section> 
-									<header class="font-bold padder-v"> 
-										<!-- <div class="btn-group pull-right"> 
-											<button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> 
-												<span class="dropdown-label">Last 24 Hours</span> 
-												<span class="caret"></span> 
-											</button> 
-											<ul class="dropdown-menu dropdown-select"> 
-												<li>
-													<a href="index.html#">
-														<input type="radio" name="a">Today
-													</a>
-												</li> 
-												<li>
-													<a href="index.html#">
-														<input type="radio" name="a">Yesterday
-													</a>
-												</li> 
-												<li>
-													<a href="index.html#">
-														<input type="radio" name="a">Last 24 Hours
-													</a>
-												</li> 
-												<li>
-													<a href="index.html#">
-														<input type="radio" name="a">Last 7 Days
-													</a>
-												</li> 
-												<li>
-													<a href="index.html#">
-														<input type="radio" name="a">Last 30 days
-													</a>
-												</li> 
-												<li>
-													<a href="index.html#">
-														<input type="radio" name="a">Last Month
-													</a>
-												</li> 
-												<li>
-													<a href="index.html#">
-														<input type="radio" name="a">All Time
-													</a>
-												</li> 
-											</ul> 
-										</div> --> Wifi Speed
-									</header> 
-									<div class="panel-body flot-legend"> 
-										<div id="flot-pie-donut" style="height:240px"></div> 
-									</div> 
-								</section> 
-							</div>
-
-</div>
+<!--START PAGE CONTENT WRAPPER -->
+      <div class="page-content-wrapper ">
+        <!-- START PAGE CONTENT -->
+        <div class="content sm-gutter">
+          <!-- START CONTAINER FLUID -->
+          <div class="container-fluid padding-25 sm-padding-10">
+            <!-- START ROW -->
+            <div class="row">
+              <div class="col-md-6 col-xlg-5">
+                <div class="row">
+                  <div class="col-md-12 m-b-10">
+                    <div class="ar-3-2 widget-1-wrapper">
+                      <!-- START WIDGET widget_imageWidget-->
+                      <div class="widget-1 panel no-border bg-complete no-margin widget-loader-circle-lg">
+                        <div class="panel-heading top-right ">
+                          <div class="panel-controls">
+                            <ul>
+                              <li><a data-toggle="refresh" class="portlet-refresh text-black" href="#"><i
+                class="portlet-icon portlet-icon-refresh-lg-master"></i></a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="panel-body">
+                          <div class="pull-bottom bottom-left bottom-right ">
+                            <span class="label font-montserrat fs-11">Lenders</span>
+                            <br>
+                            <h2 class="text-white">Rides in a week</h2>
+                            <p class="text-white hint-text"></p>
+                            <div class="row stock-rates m-t-15">
+                              <div class="company col-xs-4">
+                                <div>
+                                  <p class="font-montserrat text-success no-margin fs-16">
+                                    <i class="fa fa-caret-up"></i> +0.95%
+                                    <span class="font-arial text-white fs-12 hint-text m-l-5">1500</span>
+                                  </p>
+                                  <p class="bold text-white no-margin fs-11 font-montserrat lh-normal">
+                                    Rides
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="company col-xs-4">
+                                <div>
+                                  <p class="font-montserrat text-danger no-margin fs-16">
+                                    <i class="fa fa-caret-up"></i> -0.34%
+                                    <span class="font-arial text-white fs-12 hint-text m-l-5">345</span>
+                                  </p>
+                                  <p class="bold text-white no-margin fs-11 font-montserrat lh-normal">
+                                    Courier
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="company col-xs-4">
+                                <div class="pull-right">
+                                  <p class="font-montserrat text-success no-margin fs-16">
+                                    <i class="fa fa-caret-up"></i> +0.95%
+                                    <span class="font-arial text-white fs-12 hint-text m-l-5">278</span>
+                                  </p>
+                                  <p class="bold text-white no-margin fs-11 font-montserrat lh-normal">
+                                    Bidding
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- END WIDGET -->
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6 m-b-10">
+                    <div class="ar-2-1">
+                      <!-- START WIDGET widget_graphTile-->
+                      <div class="widget-4 panel no-border  no-margin widget-loader-bar">
+                        <div class="container-sm-height full-height">
+                          <div class="row-sm-height">
+                            <div class="col-sm-height col-top">
+                              <div class="panel-heading ">
+                                <div class="panel-title text-black hint-text">
+                                  <span class="font-montserrat fs-11 all-caps">
+                                    Ride revenue <i class="fa fa-chevron-right"></i>
+                                  </span>
+                                </div>
+                                <div class="panel-controls">
+                                  <ul>
+                                    <li><a href="#" class="portlet-refresh text-black" data-toggle="refresh"><i
+                    class="portlet-icon portlet-icon-refresh"></i></a>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row-sm-height">
+                            <div class="col-sm-height col-top">
+                              <div class="p-l-20 p-r-20">
+                                <h5 class="no-margin p-b-5 pull-left hint-text">Rides</h5>
+                                <p class="pull-right no-margin bold hint-text">2,563</p>
+                                <div class="clearfix"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row-sm-height">
+                            <div class="col-sm-height col-bottom ">
+                              <div class="widget-4-chart line-chart " data-line-color="success" data-area-color="success-light" data-y-grid="false" data-points="false" data-stroke-width="2">
+                                <svg></svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- END WIDGET -->
+                    </div>
+                  </div>
+                  <div class="col-sm-6 m-b-10">
+                    <div class="ar-2-1">
+                      <!-- START WIDGET widget_barTile-->
+                      <div class="widget-5 panel no-border  widget-loader-bar">
+                        <div class="panel-heading pull-top top-right">
+                          <div class="panel-controls">
+                            <ul>
+                              <li><a data-toggle="refresh" class="portlet-refresh text-black" href="#"><i
+              class="portlet-icon portlet-icon-refresh"></i></a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="container-xs-height full-height">
+                          <div class="row row-xs-height">
+                            <div class="col-xs-5 col-xs-height col-middle relative">
+                              <div class="padding-15 top-left bottom-left">
+                                <h5 class="hint-text no-margin p-l-10">UK</h5>
+                                <p class=" bold font-montserrat p-l-10">2,345,789
+                                  <br>GBP</p>
+                                <p class=" hint-text visible-xlg p-l-10">Today's Earning</p>
+                              </div>
+                            </div>
+                            <div class="col-xs-7 col-xs-height col-bottom relative widget-5-chart-container">
+                              <div class="widget-5-chart"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- END WIDGET -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xlg-4">
+                <div class="row">
+                  <div class="col-sm-6 m-b-10">
+                    <div class="ar-1-1">
+                      <!-- START WIDGET widget_imageWidgetBasic-->
+                      <div class="widget-2 panel no-border bg-primary widget widget-loader-circle-lg no-margin">
+                        <div class="panel-heading">
+                          <div class="panel-controls">
+                            <ul>
+                              <li><a href="#" class="portlet-refresh" data-toggle="refresh"><i
+              class="portlet-icon portlet-icon-refresh-lg-white"></i></a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="panel-body">
+                          <div class="pull-bottom bottom-left bottom-right padding-25">
+                            <span class="label font-montserrat fs-11">NEWS</span>
+                            <br>
+                            <h3 class="text-white">Ongoing rides: 153</h3>
+                            <p class="text-white hint-text hidden-md">Generating Revenue</p>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- END WIDGET -->
+                    </div>
+                  </div>
+                  <div class="col-sm-6 m-b-10">
+                    <div class="ar-1-1">
+                      <!-- START WIDGET widget_plainLiveWidget-->
+                      <div class="widget-3 panel no-border bg-complete no-margin widget-loader-bar">
+                        <div class="panel-body no-padding">
+                          <div class="metro live-tile" data-mode="carousel" data-start-now="true" data-delay="3000">
+                            <div class="slide-front tiles slide active">
+                              <div class="padding-30">
+                                <div class="pull-top">
+                                  <div class="pull-left visible-lg visible-xlg">
+                                    <i class="pg-map"></i>
+                                  </div>
+                                  <div class="pull-right">
+                                    <ul class="list-inline ">
+                                      <li>
+                                        <a href="#" class="no-decoration"><i class="pg-comment"></i>
+                                        </a>
+                                      </li>
+                                      <li>
+                                        <a href="#" class="widget-3-fav no-decoration"><i class="pg-like"></i>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                  <div class="clearfix"></div>
+                                </div>
+                                <div class="pull-bottom p-b-30">
+                                  <p class="p-t-10 fs-12 p-b-5 hint-text">19 Dec</p>
+                                  <h3 class="no-margin text-white p-b-10">Carefully
+                                <br>designed for a
+                                <br>great
+                                <span class="semi-bold">experience</span>
+                            </h3>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="slide-back tiles">
+                              <div class="padding-30">
+                                <div class="pull-top">
+                                  <div class="pull-left visible-lg visible-xlg">
+                                    <i class="pg-map"></i>
+                                  </div>
+                                  <div class="pull-right">
+                                    <ul class="list-inline ">
+                                      <li>
+                                        <a href="#" class="no-decoration"><i class="pg-comment"></i>
+                                        </a>
+                                      </li>
+                                      <li>
+                                        <a href="#" class="widget-3-fav no-decoration"><i class="pg-like"></i>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                  <div class="clearfix"></div>
+                                </div>
+                                <div class="pull-bottom p-b-30">
+                                  <p class="p-t-10 fs-12 p-b-5 hint-text">20 Dec</p>
+                                  <h3 class="no-margin text-white p-b-10">A whole new
+                                <br>
+                                <span class="semi-bold">app</span>
+                            </h3>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- END WIDGET -->
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6 m-b-10">
+                    <div class="ar-1-1">
+                      <!-- START WIDGET widget_plainWidget-->
+                      <div class="panel no-border bg-master widget widget-6 widget-loader-circle-lg no-margin">
+                        <div class="panel-heading">
+                          <div class="panel-controls">
+                            <ul>
+                              <li><a data-toggle="refresh" class="portlet-refresh" href="#"><i class="portlet-icon portlet-icon-refresh-lg-white"></i></a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="panel-body">
+                          <div class="pull-bottom bottom-left bottom-right padding-25">
+                            <h1 class="text-white semi-bold">14&#176;</h1>
+                            <span class="label font-montserrat fs-11">TODAY</span>
+                            <p class="text-white m-t-20">Feels like rainy</p>
+                            <p class="text-white hint-text m-t-30">November 2016, 19 Monday </p>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- END WIDGET -->
+                    </div>
+                  </div>
+                  <div class="col-sm-6 m-b-10">
+                    <div class="ar-1-1">
+                      <!-- START WIDGET D3 widget_graphLiveWidget-->
+                      <div class="widget-7 panel no-border bg-success no-margin">
+                        <div class="panel-body no-padding">
+                          <div class="metro live-tile " data-delay="3500" data-mode="carousel">
+                            <div class="slide-front tiles slide active">
+                              <div class="padding-30">
+                                <div class="pull-bottom p-b-30 bottom-right bottom-left p-l-30 p-r-30">
+                                  <h5 class="no-margin semi-bold p-b-5">Tax-ee</h5>
+                                  <p class="no-margin text-black hint-text"><%= Time.now %></p>
+                                  <h3 class="semi-bold text-white"><i
+                  class="fa fa-sort-up small text-white"></i> 0.15 (0.13%)
+              </h3>
+                                  <p><span class="text-black">Open</span> <span class="m-l-20 hint-text">117.52</span>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="slide-back tiles">
+                              <div class="container-sm-height full-height">
+                                <div class="row-sm-height">
+                                  <div class="col-sm-height padding-25">
+                                    <p class="hint-text text-black">Pre-market: 116.850.50 (0.43%)
+                                    </p>
+                                    <p class="p-t-10 text-black">Tax-ee</p>
+                                    <div class="p-t-10">
+                                      <p class="hint-text inline">+0.42% <span class="m-l-20">217.51</span>
+                                      </p>
+                                      <div class="inline"><i class="fa fa-sort-up small text-white fs-16 col-bottom"></i>
+                                      </div>
+                                    </div>
+                                    <!--
+                                    <p class="p-t-10 text-black">GOOG - Google inc.</p>
+                                    <div class="p-t-10">
+                                      <p class="hint-text inline">+0.22% <span class="m-l-20">-2.28</span>
+                                      </p>
+                                      <div class="inline"><i class="fa fa-sort-down small text-white fs-16 col-top"></i>
+                                      </div>
+                                    </div>
+                                    -->
+                                  </div>
+                                </div>
+                                <div class="row-sm-height">
+                                  <div class="col-sm-height relative">
+                                    <div class='widget-7-chart line-chart' data-line-color="white" data-points="true" data-point-color="white" data-stroke-width="3">
+                                      <svg></svg>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- END WIDGET -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Filler -->
+              <div class="visible-xlg col-xlg-3">
+                <div class="ar-2-3">
+                  <!-- START WIDGET widget_tableWidget-->
+                  <div class="widget-11 panel no-border  no-margin widget-loader-bar hidden">
+                    <div class="panel-heading ">
+                      <div class="panel-title">Today's Table
+                      </div>
+                      <div class="panel-controls">
+                        <ul>
+                          <li><a data-toggle="refresh" class="portlet-refresh text-black" href="#"><i
+              class="portlet-icon portlet-icon-refresh"></i></a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="p-l-25 p-r-25 p-b-20">
+                      <div class="pull-left">
+                        <h2 class="text-success no-margin">webarch</h2>
+                      </div>
+                      <h3 class="pull-right semi-bold"><sup>
+        <small class="semi-bold">$</small>
+      </sup> 102,967
+      </h3>
+                      <div class="clearfix"></div>
+                    </div>
+                    <div class="widget-11-table auto-overflow">
+                      <table class="table table-condensed table-striped">
+                        <tbody>
+                          <tr>
+                            <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                            <td class="text-right">
+                              <span class="hint-text small">dewdrops</span>
+                            </td>
+                            <td class="text-right b-r b-dashed b-grey">
+                              <span class="hint-text small">Qty 1</span>
+                            </td>
+                            <td>
+                              <span class="font-montserrat fs-18">$27</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                            <td class="text-right">
+                              <span class="hint-text small">johnsmith</span>
+                            </td>
+                            <td class="text-right b-r b-dashed b-grey">
+                              <span class="hint-text small">Qty 1</span>
+                            </td>
+                            <td>
+                              <span class="font-montserrat fs-18 text-primary">$1000</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                            <td class="text-right">
+                              <span class="hint-text small">janedrooler</span>
+                            </td>
+                            <td class="text-right b-r b-dashed b-grey">
+                              <span class="hint-text small">Qty 1</span>
+                            </td>
+                            <td>
+                              <span class="font-montserrat fs-18">$27</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                            <td class="text-right">
+                              <span class="hint-text small">johnsmith</span>
+                            </td>
+                            <td class="text-right b-r b-dashed b-grey">
+                              <span class="hint-text small">Qty 1</span>
+                            </td>
+                            <td>
+                              <span class="font-montserrat fs-18 text-primary">$1000</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                            <td class="text-right">
+                              <span class="hint-text small">dewdrops</span>
+                            </td>
+                            <td class="text-right b-r b-dashed b-grey">
+                              <span class="hint-text small">Qty 1</span>
+                            </td>
+                            <td>
+                              <span class="font-montserrat fs-18">$27</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                            <td class="text-right">
+                              <span class="hint-text small">johnsmith</span>
+                            </td>
+                            <td class="text-right b-r b-dashed b-grey">
+                              <span class="hint-text small">Qty 1</span>
+                            </td>
+                            <td>
+                              <span class="font-montserrat fs-18 text-primary">$1000</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                            <td class="text-right">
+                              <span class="hint-text small">dewdrops</span>
+                            </td>
+                            <td class="text-right b-r b-dashed b-grey">
+                              <span class="hint-text small">Qty 1</span>
+                            </td>
+                            <td>
+                              <span class="font-montserrat fs-18">$27</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                            <td class="text-right">
+                              <span class="hint-text small">johnsmith</span>
+                            </td>
+                            <td class="text-right b-r b-dashed b-grey">
+                              <span class="hint-text small">Qty 1</span>
+                            </td>
+                            <td>
+                              <span class="font-montserrat fs-18 text-primary">$1000</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                            <td class="text-right">
+                              <span class="hint-text small">dewdrops</span>
+                            </td>
+                            <td class="text-right b-r b-dashed b-grey">
+                              <span class="hint-text small">Qty 1</span>
+                            </td>
+                            <td>
+                              <span class="font-montserrat fs-18">$27</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                            <td class="text-right">
+                              <span class="hint-text small">johnsmith</span>
+                            </td>
+                            <td class="text-right b-r b-dashed b-grey">
+                              <span class="hint-text small">Qty 1</span>
+                            </td>
+                            <td>
+                              <span class="font-montserrat fs-18 text-primary">$1000</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="padding-25">
+                      <p class="small no-margin">
+                        <a href="#"><i class="fa fs-16 fa-arrow-circle-o-down text-success m-r-10"></i></a>
+                        <span class="hint-text ">Show more details of APPLE . INC</span>
+                      </p>
+                    </div>
+                  </div>
+                  <!-- END WIDGET -->
+                </div>
+              </div>
+            </div>
+            <!-- END ROW -->
+            <div class="row">
+              <div class="col-md-4 col-lg-3 col-xlg-2 ">
+                <div class="row">
+                  <div class="col-md-12 m-b-10">
+                    <!-- START WIDGET D3 widget_graphTileFlat-->
+                    <div class="widget-8 panel no-border bg-success no-margin widget-loader-bar">
+                      <div class="container-xs-height full-height">
+                        <div class="row-xs-height">
+                          <div class="col-xs-height col-top">
+                            <div class="panel-heading top-left top-right">
+                              <div class="panel-title text-black hint-text">
+                                <span class="font-montserrat fs-11 all-caps">Weekly Rides Earing <i
+                                    class="fa fa-chevron-right"></i>
+                                                    </span>
+                              </div>
+                              <div class="panel-controls">
+                                <ul>
+                                  <li>
+                                    <a data-toggle="refresh" class="portlet-refresh text-black" href="#"><i
+                      class="portlet-icon portlet-icon-refresh"></i></a>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row-xs-height ">
+                          <div class="col-xs-height col-top relative">
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="p-l-20">
+                                  <h3 class="no-margin p-b-5 text-white">£14,000</h3>
+                                  <p class="small hint-text m-t-5">
+                                    <span class="label  font-montserrat m-r-5">60%</span>Higher
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                              </div>
+                            </div>
+                            <div class='widget-8-chart line-chart' data-line-color="black" data-points="true" data-point-color="success" data-stroke-width="2">
+                              <svg></svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- END WIDGET -->
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 m-b-10">
+                    <!-- START WIDGET widget_progressTileFlat-->
+                    <div class="widget-9 panel no-border bg-primary no-margin widget-loader-bar">
+                      <div class="container-xs-height full-height">
+                        <div class="row-xs-height">
+                          <div class="col-xs-height col-top">
+                            <div class="panel-heading  top-left top-right">
+                              <div class="panel-title text-black">
+                                <span class="font-montserrat fs-11 all-caps">Weekly Courier Earning <i
+                                    class="fa fa-chevron-right"></i>
+                                                    </span>
+                              </div>
+                              <div class="panel-controls">
+                                <ul>
+                                  <li><a href="#" class="portlet-refresh text-black" data-toggle="refresh"><i
+                    class="portlet-icon portlet-icon-refresh"></i></a>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row-xs-height">
+                          <div class="col-xs-height col-top">
+                            <div class="p-l-20 p-t-15">
+                              <h3 class="no-margin p-b-5 text-white">£23,000</h3>
+                              <a href="#" class="btn-circle-arrow text-white"><i
+                class="pg-arrow_minimize"></i>
+            </a>
+                              <span class="small hint-text">65% lower than last week</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row-xs-height">
+                          <div class="col-xs-height col-bottom">
+                            <div class="progress progress-small m-b-20">
+                              <!-- START BOOTSTRAP PROGRESS (http://getbootstrap.com/components/#progress) -->
+                              <div class="progress-bar progress-bar-white" style="width:45%"></div>
+                              <!-- END BOOTSTRAP PROGRESS -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- END WIDGET -->
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <!-- START WIDGET widget_statTile-->
+                    <div class="widget-10 panel no-border bg-white no-margin widget-loader-bar">
+                      <div class="panel-heading top-left top-right ">
+                        <div class="panel-title text-black hint-text">
+                          <span class="font-montserrat fs-11 all-caps">Weekly Earning <i class="fa fa-chevron-right"></i>
+                                        </span>
+                        </div>
+                        <div class="panel-controls">
+                          <ul>
+                            <li><a data-toggle="refresh" class="portlet-refresh text-black" href="#"><i
+              class="portlet-icon portlet-icon-refresh"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="panel-body p-t-40">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <h4 class="no-margin p-b-5 text-danger semi-bold">Tax-ee</h4>
+                            <div class="pull-left small">
+                              <span>Rides</span>
+                              <span class=" text-success font-montserrat">
+                                                    <i class="fa fa-caret-up m-l-10"></i> 9%
+                                                </span>
+                            </div>
+                            <div class="pull-left m-l-20 small">
+                              <span>Courier</span>
+                              <span class=" text-danger font-montserrat">
+                                                    <i class="fa fa-caret-up m-l-10"></i> 21%
+                                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                          </div>
+                        </div>
+                        <div class="p-t-10 full-width">
+                          <a href="#" class="btn-circle-arrow b-grey"><i
+            class="pg-arrow_minimize text-danger"></i></a>
+                          <span class="hint-text small">Show more</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- END WIDGET -->
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-8 col-lg-5 col-xlg-6 m-b-10">
+                <div class="row">
+                  <div class="col-md-12">
+                    <!-- START WIDGET D3 widget_graphWidget-->
+                    <div class="widget-12 panel no-border widget-loader-circle no-margin">
+                      <div class="row">
+                        <div class="col-xlg-8 ">
+                          <div class="panel-heading pull-up top-right ">
+                            <div class="panel-controls">
+                              <ul>
+                                <li class="hidden-xlg hidden">
+                                  <div class="dropdown">
+                                    <a data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                                      <i class="portlet-icon portlet-icon-settings"></i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right" role="menu">
+                                      <li><a href="#">AAPL</a>
+                                      </li>
+                                      <li><a href="#">YHOO</a>
+                                      </li>
+                                      <li><a href="#">GOOG</a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </li>
+                                <li>
+                                  <a data-toggle="refresh" class="portlet-refresh text-black" href="#"><i class="portlet-icon portlet-icon-refresh"></i></a>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="panel-body">
+                        <div class="row">
+                          <div class="col-xlg-8 ">
+                            <div class="p-l-10">
+                              <h2 class="pull-left">Rides</h2>
+                              <h2 class="pull-left m-l-50 text-danger">
+              <span class="bold">448.97</span>
+              <span class="text-danger fs-12">-318.24</span>
+            </h2>
+                              <div class="clearfix"></div>
+                              <div class="full-width hidden">
+                                <ul class="list-inline">
+                                  <li><a href="#" class="font-montserrat text-master">1D</a>
+                                  </li>
+                                  <li class="active"><a href="#" class="font-montserrat  bg-master-light text-master">5D</a>
+                                  </li>
+                                  <li><a href="#" class="font-montserrat text-master">1M</a>
+                                  </li>
+                                  <li><a href="#" class="font-montserrat text-master">1Y</a>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div class="nvd3-line line-chart text-center" data-x-grid="false">
+                                <svg></svg>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xlg-4 visible-xlg">
+                            <div class="widget-12-search">
+                              <p class="pull-left">Company
+                                <span class="bold">List</span>
+                              </p>
+                              <button class="btn btn-default btn-xs pull-right">
+                                <span class="bold">+</span>
+                              </button>
+                              <div class="clearfix"></div>
+                              <input type="text" placeholder="Search list" class="form-control m-t-5">
+                            </div>
+                            <div class="company-stat-boxes">
+                              <div data-index="0" class="company-stat-box m-t-15 active padding-20 bg-master-lightest">
+                                <div>
+                                  <button type="button" class="close" data-dismiss="modal">
+                                    <i class="pg-close fs-12"></i>
+                                  </button>
+                                  <p class="company-name pull-left text-uppercase bold no-margin">
+                                    <span class="fa fa-circle text-success fs-11"></span> AAPL
+                                  </p>
+                                  <small class="hint-text m-l-10">Yahoo Inc.</small>
+                                  <div class="clearfix"></div>
+                                </div>
+                                <div class="m-t-10">
+                                  <p class="pull-left small hint-text no-margin p-t-5">9:42AM ET</p>
+                                  <div class="pull-right">
+                                    <p class="small hint-text no-margin inline">37.73</p>
+                                    <span class=" label label-important p-t-5 m-l-5 p-b-5 inline fs-12">+ 0.09</span>
+                                  </div>
+                                  <div class="clearfix"></div>
+                                </div>
+                              </div>
+                              <div data-index="1" class="company-stat-box m-t-15  padding-20 bg-master-lightest">
+                                <div>
+                                  <button type="button" class="close" data-dismiss="modal">
+                                    <i class="pg-close fs-12"></i>
+                                  </button>
+                                  <p class="company-name pull-left text-uppercase bold no-margin">
+                                    <span class="fa fa-circle text-primary fs-11"></span> YHOO
+                                  </p>
+                                  <small class="hint-text m-l-10">Yahoo Inc.</small>
+                                  <div class="clearfix"></div>
+                                </div>
+                                <div class="m-t-10">
+                                  <p class="pull-left small hint-text no-margin p-t-5">9:42AM ET</p>
+                                  <div class="pull-right">
+                                    <p class="small hint-text no-margin inline">37.73</p>
+                                    <span class=" label label-success p-t-5 m-l-5 p-b-5 inline fs-12">+ 0.09</span>
+                                  </div>
+                                  <div class="clearfix"></div>
+                                </div>
+                              </div>
+                              <div data-index="2" class="company-stat-box m-t-15  padding-20 bg-master-lightest">
+                                <div>
+                                  <button type="button" class="close" data-dismiss="modal">
+                                    <i class="pg-close fs-12"></i>
+                                  </button>
+                                  <p class="company-name pull-left text-uppercase bold no-margin">
+                                    <span class="fa fa-circle text-complete fs-11"></span> GOOG
+                                  </p>
+                                  <small class="hint-text m-l-10">Yahoo Inc.</small>
+                                  <div class="clearfix"></div>
+                                </div>
+                                <div class="m-t-10">
+                                  <p class="pull-left small hint-text no-margin p-t-5">9:42AM ET</p>
+                                  <div class="pull-right">
+                                    <p class="small hint-text no-margin inline">37.73</p>
+                                    <span class=" label label-success p-t-5 m-l-5 p-b-5 inline fs-12">+ 0.09</span>
+                                  </div>
+                                  <div class="clearfix"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    </template>
+                    <!-- END WIDGET -->
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 hidden-xlg m-b-10">
+                <!-- START WIDGET widget_realtimeWidget-->
+                <div class="widget-14 panel no-border  no-margin widget-loader-circle">
+                  <div class="container-xs-height full-height">
+                    <div class="row-xs-height">
+                      <div class="col-xs-height">
+                        <div class="panel-heading">
+                          <div class="panel-title">Server load
+                          </div>
+                          <div class="panel-controls">
+                            <ul>
+                              <li><a href="#" class="portlet-refresh text-black" data-toggle="refresh"><i
+                    class="portlet-icon portlet-icon-refresh"></i></a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row-xs-height">
+                      <div class="col-xs-height">
+                        <div class="p-l-20 p-r-20">
+                          <p>Server: www.digitalocean.com</p>
+                          <div class="row">
+                            <div class="col-lg-3 col-md-12">
+                              <h4 class="bold no-margin">5.2GB</h4>
+                              <p class="small no-margin">Total usage</p>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                              <h5 class=" no-margin p-t-5">227.34KB</h5>
+                              <p class="small no-margin">Currently</p>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                              <h5 class=" no-margin p-t-5">117.65MB</h5>
+                              <p class="small no-margin">Average</p>
+                            </div>
+                            <div class="col-lg-3 visible-xlg">
+                              <div class="widget-14-chart-legend bg-transparent text-black no-padding pull-right"></div>
+                              <div class="clearfix"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row-xs-height">
+                      <div class="col-xs-height relative bg-master-lightest">
+                        <div class="widget-14-chart_y_axis"></div>
+                        <div class="widget-14-chart rickshaw-chart top-left top-right bottom-left bottom-right"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- END WIDGET -->
+              </div>   
+            </div>
+          </div>
+          <!-- END CONTAINER FLUID -->
+        </div>
+        <!-- END PAGE CONTENT -->
+        <!-- START COPYRIGHT -->
+        <!-- START CONTAINER FLUID -->
+        <!-- START CONTAINER FLUID -->
+        <div class="container-fluid container-fixed-lg footer">
+          <div class="copyright sm-text-center">
+            <p class="small no-margin pull-left sm-pull-reset">
+              <span class="hint-text">Copyright &copy; 2016 </span>
+              <span class="font-montserrat"><a href="http://45.55.250.8" class="m-l-10 m-r-10" target="_blank">TAX-EE</a></span>.
+              <span class="hint-text">All rights reserved. </span>
+              <span class="sm-block"><a href="#" class="m-l-10 m-r-10">Terms of use</a> | <a href="#" class="m-l-10">Privacy Policy</a></span>
+            </p>
+            <!-- <p class="small no-margin pull-right sm-pull-reset">
+              <a href="#">Hand-crafted</a> <span class="hint-text">&amp; Made with Love ®</span>
+            </p> -->
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <!-- END COPYRIGHT -->
+      </div>
+      <!-- END PAGE CONTENT WRAPPER
