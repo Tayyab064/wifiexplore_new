@@ -1265,40 +1265,6 @@
               radius: 20
             });*/
 
-          var i = 0 ;
-          <% @wifis.each do |wifi| %>
-
-            temp_pos = {
-                lat: <%= wifi.latitude %>,
-                lng: <%= wifi.longitude %>
-              };
-
-            marker1 = new google.maps.Marker({
-                    position: temp_pos,
-                    map: map,
-                icon: im
-
-                });
-                markersArray.push(marker1);
-
-
-                infowindow = new google.maps.InfoWindow({
-                  maxWidth: 350
-                });
-
-                google.maps.event.addListener(marker1, 'click', (function(marker1, i) {
-                  return function() {
-                      var markerid = marker1.alt;
-                      var cs = '<div ><h3> <%= wifi.name %> </h3><div ><p><strong>Address:</strong> <%= wifi.address %> </p></div></div>';
-                      infowindow.setContent(cs);
-                      infowindow.open(map, marker1);
-
-
-                  }
-                })(marker1, i));
-              i = i + 1 ;
-          <% end %>
-
           }, function() {
             //handleLocationError(true, infoWindow, map.getCenter());
           });
@@ -1306,6 +1272,40 @@
           // Browser doesn't support Geolocation
           //handleLocationError(false, infoWindow, map.getCenter());
         }
+
+        var i = 0 ;
+        <% @wifis.each do |wifi| %>
+
+          temp_pos = {
+              lat: <%= wifi.latitude %>,
+              lng: <%= wifi.longitude %>
+            };
+
+          marker1 = new google.maps.Marker({
+                  position: temp_pos,
+                  map: map,
+              icon: im
+
+              });
+              markersArray.push(marker1);
+
+
+              infowindow = new google.maps.InfoWindow({
+                maxWidth: 350
+              });
+
+              google.maps.event.addListener(marker1, 'click', (function(marker1, i) {
+                return function() {
+                    var markerid = marker1.alt;
+                    var cs = '<div ><h3> <%= wifi.name %> </h3><div ><p><strong>Address:</strong> <%= wifi.address %> </p></div></div>';
+                    infowindow.setContent(cs);
+                    infowindow.open(map, marker1);
+
+
+                }
+              })(marker1, i));
+            i = i + 1 ;
+        <% end %>
   }
 
   function handleLocationError(browserHasGeolocation, infoWindow, pos) {

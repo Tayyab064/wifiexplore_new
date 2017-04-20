@@ -39,7 +39,7 @@
 					<td><%= wifi.latitude %></td>
 					<td><%= wifi.longitude %></td>
 					<td><%= wifi.price %></td>
-					<td><%= (wifi.avg_speed/1024).round(2) %> MB</td>
+					<td><%= wifi.avg_speed < 1024 ? wifi.avg_speed : (wifi.avg_speed/1024).round(2) %> MB</td>
 					<td><%= wifi.blocked ? link_to('Blocked' , lender_unblock_wifi_path(wifi.id) , class: 'btn btn-danger') : link_to('Block' , lender_block_wifi_path(wifi.id) , class: 'btn btn-success') %>
 					</td>
 				</tr>
