@@ -3,7 +3,15 @@
 <!-- START PAGE CONTENT -->
   <div class="content">
 
-  	<div id="chart-container">Connections</div>
+  <div class="row">
+  	<div class="col-md-6">
+  		<div id="chart-container">Connections</div>
+  	</div>
+  	<div class="col-md-6">
+  		<div id="rat-container">Ratings</div>
+  	</div>
+  </div>
+  <hr>
     <!-- START CONTAINER FLUID -->
     <div class="container-fluid container-fixed-lg bg-white">
       <!-- START PANEL -->
@@ -89,24 +97,6 @@
 					         	<hr>
 					         	<div class="row">
 					        		<div class="col-md-4">
-					         			<strong>Latitude: </strong>
-					         		</div>
-					         		<div class="col-md-8">
-					         			<%= connection.wifi.latitude %>
-					         		</div>
-					         	</div>
-					         	<hr>
-					         	<div class="row">
-					        		<div class="col-md-4">
-					         			<strong>Longitude: </strong>
-					         		</div>
-					         		<div class="col-md-8">
-					         			<%= connection.wifi.longitude %>
-					         		</div>
-					         	</div>
-					         	<hr>
-					         	<div class="row">
-					        		<div class="col-md-4">
 					         			<strong>SSID: </strong>
 					         		</div>
 					         		<div class="col-md-8">
@@ -125,10 +115,25 @@
 					         	<hr>
 					         	<div class="row">
 					        		<div class="col-md-4">
+					         			<strong>Wifi Rating: </strong>
+					         		</div>
+					         		<div class="col-md-8">
+					         			<% if connection.wifi.rating > 0 %>
+					         			<% connection.wifi.rating.times do |rat| %>
+					         			&#x2605
+					         			<% end %>
+					         			<% else %>
+					         			User's doesn't rated this Wifi.
+					         			<% end %>
+					         		</div>
+					         	</div>
+					         	<hr>
+					         	<div class="row">
+					        		<div class="col-md-4">
 					         			<strong>Speed: </strong>
 					         		</div>
 					         		<div class="col-md-8">
-					         			<%= (connection.wifi.avg_speed/1024).round %>MB
+					         			<%= connection.wifi.avg_speed < 1024 ? connection.wifi.avg_speed : (connection.wifi.avg_speed/1024).round %>MB
 					         		</div>
 					         	</div>
 					          <% else %>
@@ -246,7 +251,7 @@
         type: 'doughnut2d',
         renderAt: 'chart-container',
         width: '100%',
-        height: '70%',
+        height: '450',
         dataFormat: 'json',
         dataSource: {
             "chart": {
@@ -282,6 +287,68 @@
                 {
                     "label": "Disconnected",
                     "value": "<%= @connect_disconnected %>"
+                }
+            ]
+        }
+    }).render();
+});
+</script>
+
+<script type="text/javascript">
+	FusionCharts.ready(function () {
+    var revenueChart = new FusionCharts({
+        type: 'doughnut2d',
+        renderAt: 'rat-container',
+        width: '100%',
+        height: '450',
+        dataFormat: 'json',
+        dataSource: {
+            "chart": {
+                "caption": "Ratings",
+                "subCaption": "",
+                "numberPrefix": "",
+                "paletteColors": "#0075c2,#1aaf5d,#f2c500,#f45b00,#8e0000,#f09sd2",
+                "bgColor": "#ffffff",
+                "showBorder": "0",
+                "use3DLighting": "0",
+                "showShadow": "0",
+                "enableSmartLabels": "0",
+                "startingAngle": "310",
+                "showLabels": "0",
+                "showPercentValues": "1",
+                "showLegend": "1",
+                "legendShadow": "0",
+                "legendBorderAlpha": "0",
+                "defaultCenterLabel": "Rated connections",
+                "centerLabel": "$label: $value",
+                "centerLabelBold": "1",
+                "showTooltip": "0",
+                "decimals": "0",
+                "captionFontSize": "14",
+                "subcaptionFontSize": "14",
+                "subcaptionFontBold": "0"
+            },
+            "data": [
+                {
+                    "label": "1 Star",
+                    "value": "<%= @star_1 %>"
+                }, 
+                {
+                    "label": "2 Star",
+                    "value": "<%= @star_2 %>"
+                }, 
+                {
+                    "label": "3 Star",
+                    "value": "<%= @star_3 %>"
+                }, 
+                {
+                    "label": "4 Star",
+                    "value": "<%= @star_4 %>"
+                }
+                , 
+                {
+                    "label": "5 Star",
+                    "value": "<%= @star_5 %>"
                 }
             ]
         }

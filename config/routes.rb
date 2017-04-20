@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     post 'approve_signin' => 'lender#approve_signin' , as: 'lender_approve_signin'
     get 'dashboard' => 'lender#index' , as: 'lender_dashboard_index'
 
-    get 'wifi_map' => 'lender#wifi_map' , as: 'lender_wifi_map'
+    get 'wifi_map_:id' => 'lender#wifi_map' , as: 'lender_wifi_map'
     get 'wifi_detail' => 'lender#wifi_table' , as: 'lender_wifi_table'
 
     get 'block_wifi/:id' => 'lender#block_wifi' , as: 'lender_block_wifi'
@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     get 'datausage' => 'lender#datausage' , as: 'lender_datausage'
     
     get 'signout' => 'lender#signout' , as: 'lender_signout'
+    post 'withdraw' => 'lender#withdraw_amount' , as: 'lender_withdraw'
 
   end
 

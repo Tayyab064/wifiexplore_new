@@ -26,7 +26,9 @@ class LenderController < ApplicationController
 	end
 
 	def wifi_map
-		@wifi = @lender.wifis
+		unless @wifi = @lender.wifis.find_by_id(params[:id])
+			redirect_to '/lender/dashboard'
+		end
 	end
 
 	def wifi_table
@@ -49,6 +51,12 @@ class LenderController < ApplicationController
 		@wifi = @lender.wifis
 
 		conne = Connection.where(wifi_id: @wifi.pluck(:id))
+		rat = Rating.where(connection_id: conne.pluck(:id))
+		@star_1 = rat.where(rate: 1).count
+		@star_2 = rat.where(rate: 2).count
+		@star_3 = rat.where(rate: 3).count
+		@star_4 = rat.where(rate: 4).count
+		@star_5 = rat.where(rate: 5).count
 
 		@connect_count = conne.count
 		@connect_connected = conne.where(disconnected_at: nil).count
@@ -61,6 +69,8 @@ class LenderController < ApplicationController
 		@wifi_conn = ''
 		@total_earning = 0
 		wifcon = 0
+
+		@withdraw = @lender.withdraws.pluck(:amount).sum
 		
 		@wifi.order(updated_at: 'DESC').each do |wif|
 			
@@ -93,5 +103,22 @@ class LenderController < ApplicationController
 	def signout
 		session[:lender] = nil
 		redirect_to '/lender/signin' , notice: 'Successfully SignedOut!'
+	end
+
+	def withdraw_amount
+		if params[:amount].to_i > 0
+			Withdraw.create(amount: params[:amount] , lender_id: @lender.id)
+		end
+		unless @lender.bank_information.present?
+			c = BankInformation.new bank_params
+			c.lender_id = @lender.id
+			c.save
+		end
+		redirect_to '/lender/earning'
+	end
+
+	private
+	def bank_params
+		params.permit(:currency , :country , :name , :routing_number , :account_number)
 	end
 end

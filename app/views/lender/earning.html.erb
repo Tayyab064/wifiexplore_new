@@ -3,6 +3,17 @@
 <!-- START PAGE CONTENT -->
   <div class="content">
     <!-- START CONTAINER FLUID -->
+    <div class="row">
+      <div class="col-md-4">
+        <button class="btn btn-success btn-lg" style="width: 100%; cursor: initial;">Earnings: $<%= @total_earning > 1000 ? (@total_earning/1000).round(2).to_s+'K' : @total_earning  %></button>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-success btn-lg" style="width: 100%; cursor: initial;">Withdrawn: $<%= @withdraw > 1000 ? (@withdraw/1000).round(2).to_s+'K' : @withdraw  %></button>
+      </div>
+      <div class="col-md-4">
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#withdraw" style="width: 100%;">Withdraw Earning</button>
+      </div>
+    </div>
 
     <div id="chart-container">Lender Earnings</div>
 
@@ -53,6 +64,78 @@
   </div>
 </div>
 
+<div id="withdraw" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Withdraw Earning</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_tag( lender_withdraw_path , id: "form-personal" , method: "post") do %>
+            <div class="row clearfix">
+              <div class="col-sm-12">
+                <div class="form-group form-group-default required">
+                  <label>Amount</label>
+                  <%= number_field_tag :amount , 10 , class: 'form-control' %>
+                </div>
+              </div>
+            </div>
+            <% unless @lender.bank_information.present? %>
+              <hr>
+              <div class="row clearfix">
+                <div class="col-sm-12">
+                  <div class="form-group form-group-default required">
+                    <label>Currency</label>
+                    <%= text_field_tag :currency , 'USD' , class: 'form-control' %>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-sm-12">
+                  <div class="form-group form-group-default required">
+                    <label>Country</label>
+                    <%= text_field_tag :country , '' , class: 'form-control' %>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-sm-12">
+                  <div class="form-group form-group-default required">
+                    <label>Bank Name</label>
+                    <%= text_field_tag :name , '' , class: 'form-control' %>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-sm-12">
+                  <div class="form-group form-group-default required">
+                    <label>Routing Number</label>
+                    <%= text_field_tag :routing_number , '' , class: 'form-control' %>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-sm-12">
+                  <div class="form-group form-group-default required">
+                    <label>Account Number</label>
+                    <%= text_field_tag :account_number , '' , class: 'form-control' %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+      </div>
+      <div class="modal-footer">
+        <%= submit_tag 'Withdraw' , class: "btn btn-success" %>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <script
   src="https://code.jquery.com/jquery-3.2.1.min.js"
   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -73,7 +156,7 @@ FusionCharts.ready(function () {
                 "caption": "Lender's Earnings",
                 "subCaption": "Wifi",
                 "xAxisName": "Wifi",
-                "yAxisName": "Earnings",
+                "yAxisName": "Earnings (K)",
                 "numberPrefix": "$",
                 "paletteColors": "#0075c2",
                 "bgColor": "#ffffff",

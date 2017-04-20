@@ -14,9 +14,9 @@
   var map;
   var markersArray = [];
   var im = '../admin/mapmarker.png';
-  <% if @wifi.count > 0 %>
-    <% latio = @wifi.first.latitude %>
-    <% longio = @wifi.first.longitude %>
+  <% if @wifi.present? %>
+    <% latio = @wifi.latitude %>
+    <% longio = @wifi.longitude %>
   <% else %>
     <% latio = 37.0902 %>
     <% longio = 95.7129 %>
@@ -64,11 +64,10 @@
         }
 
         var i = 0 ;
-          <% @wifi.each do |wifi| %>
 
             temp_pos = {
-                lat: <%= wifi.latitude %>,
-                lng: <%= wifi.longitude %>
+                lat: <%= @wifi.latitude %>,
+                lng: <%= @wifi.longitude %>
               };
 
             marker1 = new google.maps.Marker({
@@ -87,15 +86,13 @@
                 google.maps.event.addListener(marker1, 'click', (function(marker1, i) {
                   return function() {
                       var markerid = marker1.alt;
-                      var cs = '<div ><h3> <%= wifi.name %> </h3><div ><p><strong>Address:</strong> <%= wifi.address %> </p></div></div>';
+                      var cs = '<div ><h3> <%= @wifi.name %> </h3><div ><p><strong>Address:</strong> <%= @wifi.address %> </p></div></div>';
                       infowindow.setContent(cs);
                       infowindow.open(map, marker1);
 
 
                   }
                 })(marker1, i));
-              i = i + 1 ;
-          <% end %>
   }
 
   function handleLocationError(browserHasGeolocation, infoWindow, pos) {

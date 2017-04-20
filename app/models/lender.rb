@@ -15,6 +15,7 @@ class Lender < ApplicationRecord
 
 	has_many :wifis , dependent: :destroy
 	has_many :withdraws , dependent: :destroy
+	has_one :bank_information , dependent: :destroy
 
 
 	private

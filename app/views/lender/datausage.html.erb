@@ -90,19 +90,16 @@
 					         	<hr>
 					         	<div class="row">
 					        		<div class="col-md-4">
-					         			<strong>Latitude: </strong>
+					         			<strong>Wifi Rating: </strong>
 					         		</div>
 					         		<div class="col-md-8">
-					         			<%= connection.wifi.latitude %>
-					         		</div>
-					         	</div>
-					         	<hr>
-					         	<div class="row">
-					        		<div class="col-md-4">
-					         			<strong>Longitude: </strong>
-					         		</div>
-					         		<div class="col-md-8">
-					         			<%= connection.wifi.longitude %>
+					         			<% if connection.wifi.rating > 0 %>
+					         			<% connection.wifi.rating.times do |rat| %>
+					         			&#x2605
+					         			<% end %>
+					         			<% else %>
+					         			User's doesn't rated this Wifi.
+					         			<% end %>
 					         		</div>
 					         	</div>
 					         	<hr>
@@ -129,7 +126,7 @@
 					         			<strong>Speed: </strong>
 					         		</div>
 					         		<div class="col-md-8">
-					         			<%= (connection.wifi.avg_speed/1024).round %>MB
+					         			<%= connection.wifi.avg_speed < 1024 ? connection.wifi.avg_speed : (connection.wifi.avg_speed/1024).round %>MB
 					         		</div>
 					         	</div>
 					          <% else %>
