@@ -14,9 +14,9 @@
   var map;
   var markersArray = [];
   var im = '../admin/mapmarker.png';
-  <% if @wifis.count > 0 %>
-    <% latio = @wifis.first.latitude %>
-    <% longio = @wifis.first.longitude %>
+  <% if @wifi.count > 0 %>
+    <% latio = @wifi.first.latitude %>
+    <% longio = @wifi.first.longitude %>
   <% else %>
     <% latio = 37.0902 %>
     <% longio = 95.7129 %>
