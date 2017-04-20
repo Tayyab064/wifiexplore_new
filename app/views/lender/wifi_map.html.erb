@@ -14,9 +14,16 @@
   var map;
   var markersArray = [];
   var im = '../admin/mapmarker.png';
+  <% if @wifis.count > 0 %>
+    <% latio = @wifis.first.latitude %>
+    <% longio = @wifis.first.longitude %>
+  <% else %>
+    <% latio = 37.0902 %>
+    <% longio = 95.7129 %>
+  <% end %>
   function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: -34.397, lng: 150.644},
+      center: {lat: <%= latio %>, lng: <%= longio %>},
       zoom: 10
     });
     clearOverlays();
