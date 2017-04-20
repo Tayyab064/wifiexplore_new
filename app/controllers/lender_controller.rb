@@ -22,21 +22,7 @@ class LenderController < ApplicationController
 	end
 
 	def index
-		@wifis = @lender.wifis.all
-		@connections = 0
-		@total_earning = 0
-		@download_data = 0
-		@upload_data = 0
-		@connected_user = 0
-		@wifis.each do |wif|
-			@connected_user = @connected_user + wif.connections.where(disconnected_at: nil).count
-			wif.connections.each do |conn|
-				@connections = @connections + 1
-				@total_earning = @total_earning + conn.total_bill
-				@download_data = @download_data + conn.download_data
-				@upload_data = @upload_data + conn.upload_data
-			end
-		end
+		@wifis = @lender.wifis
 	end
 
 	def wifi_map
