@@ -51,6 +51,19 @@ class ApiLenderController < ApplicationController
 		end
 	end
 
+	def withdraw
+		earning = Connection.where(wifi_id: @current_lender.wifis.pluck(:id)).pluck(:total_bill).sum
+		withdraw = @current_lender.withdraws.pluck(:amount).sum
+		max_with = earning - withdraw
+		if params[:lender][:amount].to_i < max_with
+			Withdraw.create(amount: params[:lender][:amount], lender_id: @current_lender.id)
+			render json: {'message' => 'Successfully submitted'} , status: 200
+		else
+			message = 'Maximum withdraw amount is ' + max_with.to_s
+			render json: {'message' => message } , status: 422
+		end
+	end
+
 	private
 	def signup_params
 		params.require(:lender).permit(:name , :email , :mobile_number , :password)
@@ -66,5 +79,9 @@ class ApiLenderController < ApplicationController
 
 	def bank_params
 		params.require(:lender).permit( :currency , :country , :name , :routing_number , :account_number)
+	end
+
+	def withdrawparams
+		params.require(:lender).permit( :amount)
 	end
 end
