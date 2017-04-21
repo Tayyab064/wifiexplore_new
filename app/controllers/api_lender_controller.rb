@@ -40,6 +40,17 @@ class ApiLenderController < ApplicationController
 		@wifi = @current_lender.wifis
 	end
 
+	def bank_information
+		if @current_lender.bank_information.present?
+			@bank_information = @current_lender.bank_information
+			@bank_information.update bank_params
+		else
+			@bank_information = BankInformation.new bank_params
+			@bank_information.lender_id = @current_lender.id
+			@bank_information.save
+		end
+	end
+
 	private
 	def signup_params
 		params.require(:lender).permit(:name , :email , :mobile_number , :password)
@@ -51,5 +62,9 @@ class ApiLenderController < ApplicationController
 
 	def wifi_params
 		params.require(:wifi).permit( :latitude , :longitude , :name , :password , :ssid , :security_type , :price , :avg_speed)
+	end
+
+	def bank_params
+		params.require(:lender).permit( :currency , :country , :name , :routing_number , :account_number)
 	end
 end

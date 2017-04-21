@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   		post 'signin' => 'api_lender#signin'
   		post 'wifi' => 'api_lender#create_wifi'
   		get 'wifi' => 'api_lender#wifis'
+      post 'bank_information' => 'api_lender#bank_information'
 
   	end
 
