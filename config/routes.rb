@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   		get 'wifi' => 'api_lender#wifis'
       post 'bank_information' => 'api_lender#bank_information'
       post 'withdraw' => 'api_lender#withdraw'
+      put 'password' => 'api_lender#update_password'
+      get 'wallet' => 'api_lender#wallet'
+      get 'earning' => 'api_lender#earning'
 
   	end
 

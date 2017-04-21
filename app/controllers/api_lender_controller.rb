@@ -64,6 +64,44 @@ class ApiLenderController < ApplicationController
 		end
 	end
 
+	def update_password
+		if @current_lender.try(:authenticate, params[:lender][:old_password] )
+			if c = @current_lender.update(password: params[:lender][:password])
+				render json: {'message' => 'Password Updated' } , status: 200
+			else
+				render json: {'message' => c.errors } , status: 422
+			end	
+		else
+			render json: {'message' => 'Invalid Password' } , status: 422
+		end
+	end
+
+	def wallet
+		@earning = Connection.where(wifi_id: @current_lender.wifis.pluck(:id)).for_year.order(created_at: 'ASC').group_by(&:month)
+		@withdraw = @current_lender.withdraws.for_year.order(created_at: 'ASC').group_by(&:month)
+	end
+
+	def earning
+		conn = Connection.where(wifi_id: @current_lender.wifis.pluck(:id))
+		@earning = conn.for_year.order(created_at: 'ASC').group_by(&:month)
+		@rating = 0
+		@download_data = conn.pluck(:download_data).sum.round(2)
+		@upload_data = conn.pluck(:upload_data).sum.round(2)
+		@connection = conn.count
+		@earn = conn.pluck(:total_bill).sum.round(2)
+		rat = 0
+		rat_coun = 0
+		conn.each do |conni|
+			if conni.rating.present?
+				rat = rat + conni.rating.rate
+				rat_coun += 1
+			end
+		end
+		if rat > 0 && rat_coun > 0
+			@rating = (rat / rat_coun).round
+		end
+	end
+
 	private
 	def signup_params
 		params.require(:lender).permit(:name , :email , :mobile_number , :password)
@@ -84,4 +122,5 @@ class ApiLenderController < ApplicationController
 	def withdrawparams
 		params.require(:lender).permit( :amount)
 	end
+
 end
