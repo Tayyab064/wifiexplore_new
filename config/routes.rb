@@ -36,6 +36,7 @@ Rails.application.routes.draw do
     
     get 'signout' => 'lender#signout' , as: 'lender_signout'
     post 'withdraw' => 'lender#withdraw_amount' , as: 'lender_withdraw'
+    get 'withdraw' => 'lender#withdraw' , as: 'lender_withdraw_s'
 
   end
 

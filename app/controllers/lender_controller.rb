@@ -100,21 +100,34 @@ class LenderController < ApplicationController
 		@connection = Connection.where(wifi_id: @wifis.pluck(:id))
 	end
 
+	def withdraw
+		@withdraw = @lender.withdraws
+		@earning = Connection.where(wifi_id: @lender.wifis.pluck(:id)).for_year.order(created_at: 'ASC').group_by(&:month)
+		@withdraws = @withdraw.for_year.order(created_at: 'ASC').group_by(&:month)
+	end
+
 	def signout
 		session[:lender] = nil
 		redirect_to '/lender/signin' , notice: 'Successfully SignedOut!'
 	end
 
 	def withdraw_amount
-		if params[:amount].to_i > 0
-			Withdraw.create(amount: params[:amount] , lender_id: @lender.id)
-		end
 		unless @lender.bank_information.present?
 			c = BankInformation.new bank_params
 			c.lender_id = @lender.id
 			c.save
 		end
-		redirect_to '/lender/earning'
+
+		earning = Connection.where(wifi_id: @lender.wifis.pluck(:id)).pluck(:total_bill).sum
+		withdraw = @lender.withdraws.pluck(:amount).sum
+		max_with = earning - withdraw
+
+		if params[:amount].to_i > 0 && params[:amount].to_i < max_with
+			Withdraw.create(amount: params[:amount] , lender_id: @lender.id)
+			redirect_to '/lender/earning' , notice: 'Successfully requested for withdraw'
+		else
+			redirect_to '/lender/earning' , notice: 'Error: Check your amount'
+		end
 	end
 
 	private
