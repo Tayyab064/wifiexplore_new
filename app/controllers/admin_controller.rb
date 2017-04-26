@@ -5,7 +5,7 @@ class AdminController < ApplicationController
 
     def signin
     	if session[:admin].present?
-    		redirect_to '/admin/dashboard'
+    		redirect_to '/admin/dashboard', notice: 'Already SignedIn!'
     	else
 			render :layout => false
 		end
@@ -21,19 +21,14 @@ class AdminController < ApplicationController
 	end
 
 	def index
-		@users = User.all.count
-		@lenders = Lender.all.count
 		@wifis = Wifi.all
-		@connections = Connection.all
-		@total_earning = 0
-		@download_data = 0
-		@upload_data = 0
-		@connected_user = Connection.where(disconnected_at: nil).count
-		@connections.each do |conn|
-			@total_earning = @total_earning + conn.total_bill
-			@download_data = @download_data + conn.download_data
-			@upload_data = @upload_data + conn.upload_data
-		end
+		@thisyear = Report.all.for_year.order(created_at: 'ASC').group_by(&:month)
+		con = Connection.all
+		@act_conn = con.where(disconnected_at: nil).count
+		@non_act = con.count - @act_conn
+
+		@earning = con.for_year.order(created_at: 'ASC').group_by(&:month)
+		@withdraws = Withdraw.all.for_year.order(created_at: 'ASC').group_by(&:month)
 	end
 
 	def wifi_table
@@ -62,6 +57,17 @@ class AdminController < ApplicationController
 			@download_data = @download_data + conn.download_data
 			@upload_data = @upload_data + conn.upload_data
 		end
+
+		rat = Rating.all
+		@star_1 = rat.where(rate: 1).count
+		@star_2 = rat.where(rate: 2).count
+		@star_3 = rat.where(rate: 3).count
+		@star_4 = rat.where(rate: 4).count
+		@star_5 = rat.where(rate: 5).count
+
+		@connect_count = @connection.count
+		@connect_connected = @connection.where(disconnected_at: nil).count
+		@connect_disconnected = @connection.where.not(disconnected_at: nil).count
 	end
 
 	def payments
@@ -70,10 +76,7 @@ class AdminController < ApplicationController
 		@wifi_conn = ''
 		@total_earning = 0
 		connection = Connection.all
-		@avg_con = ( connection.count / @wifi.count ).round
-		connection.each do |conn|
-			@total_earning = @total_earning + conn.total_bill
-		end
+
 		@wifi.order(updated_at: 'DESC').limit(50).each do |wif|
 			
 			temp_wifi_earning = ''
@@ -92,6 +95,10 @@ class AdminController < ApplicationController
 				@wifi_conn = @wifi_conn + "," + wif.connections.count.to_s
 			end
 		end
+
+		wifiis = connection.order(created_at: 'DESC').pluck(:wifi_id)
+		@recent_wifi = Wifi.where(id: wifiis).limit(10)
+
 	end
 
 	def redir_dash
@@ -177,6 +184,7 @@ class AdminController < ApplicationController
 
 	def term_success_false
 		@user = User.where(successfully_terminated: false)
+		@per = (@user.count/User.all.count)*100
 	end
 
 	def term_success_mark_true
@@ -187,10 +195,12 @@ class AdminController < ApplicationController
 
 	def withdraw_pending
 		@withdraw = Withdraw.where(transfered: false)
+		@withdraws = @withdraw.for_year.order(created_at: 'ASC').group_by(&:month)
 	end
 
 	def withdraw_transferred
 		@withdraw = Withdraw.where(transfered: true)
+		@withdraws = @withdraw.for_year.order(created_at: 'ASC').group_by(&:month)
 	end
 
 	def mark_withdraw_pending
@@ -216,5 +226,6 @@ class AdminController < ApplicationController
 
 	def reports
 		@report = Report.all.order(created_at: 'DESC')
+		@thisyear = @report.for_year.order(created_at: 'ASC').group_by(&:month)
 	end
 end

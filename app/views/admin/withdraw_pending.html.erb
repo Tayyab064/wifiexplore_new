@@ -2,6 +2,7 @@
 <div class="page-content-wrapper ">
 <!-- START PAGE CONTENT -->
   <div class="content">
+    <div id="chart-container"></div>
     <!-- START CONTAINER FLUID -->
     <div class="container-fluid container-fixed-lg bg-white">
       <!-- START PANEL -->
@@ -45,3 +46,162 @@
     <!-- END CONTAINER FLUID -->
   </div>
 </div>
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" src="../plugin/fusionchart/fusioncharts.js"></script>
+<script type="text/javascript" src="../plugin/fusionchart/fusioncharts.powercharts.js"></script>
+
+<script type="text/javascript">
+  FusionCharts.ready(function () {
+    var inventoryChart = new FusionCharts({
+        type: 'dragcolumn2d',
+        renderAt: 'chart-container',
+        width: '100%',
+        height: '450',
+        dataFormat: 'json',
+        dataSource: {
+            "chart": {
+                "caption": "Withdraw",                
+                "subCaption": "Requested Withdraw",
+                "xAxisName": "Month",
+                "yAxisName": "Price (K)",
+                "paletteColors": "#0075c2,#1aaf5d",
+                "bgColor": "#ffffff",
+                "showAlternateHGridColor": "0",
+                "showBorder": "0",
+                "showCanvasBorder": "0",
+                "baseFontColor": "#333333",
+                "baseFont": "Helvetica Neue,Arial",
+                "captionFontSize": "14",
+                "subcaptionFontSize": "14",
+                "subcaptionFontBold": "0",
+                "usePlotGradientColor": "0",
+                "toolTipColor": "#ffffff",
+                "toolTipBorderThickness": "0",
+                "toolTipBgColor": "#000000",
+                "toolTipBgAlpha": "80",
+                "toolTipBorderRadius": "2",
+                "toolTipPadding": "5",
+                "legendBgAlpha": "0",
+                "legendBorderAlpha": "0",
+                "legendShadow": "0",
+                "legendItemFontSize": "10",
+                "legendItemFontColor": "#666666",
+                "legendCaptionFontSize": "9",
+                "divlineAlpha": "100",
+                "divlineColor": "#999999",
+                "divlineThickness": "1",
+                "divLineIsDashed": "1",
+                "divLineDashLen": "1",
+                "divLineGapLen": "1",
+            },
+            "categories": [
+                {
+                    "category": [
+                        {
+                            "label": "Jan"
+                        }, 
+                        {
+                            "label": "Feb"
+                        }, 
+                        {
+                            "label": "Mar"
+                        }, 
+                        {
+                            "label": "Apr"
+                        }, 
+                        {
+                            "label": "May"
+                        }, 
+                        {
+                            "label": "Jun"
+                        }, 
+                        {
+                            "label": "Jul"
+                        }, 
+                        {
+                            "label": "Aug"
+                        }, 
+                        {
+                            "label": "Sep"
+                        }, 
+                        {
+                            "label": "Oct"
+                        }, 
+                        {
+                            "label": "Nov"
+                        }, 
+                        {
+                            "label": "Dec"
+                        }
+                    ]
+                }
+            ],
+            "dataset": [
+                {
+                    "seriesname": "Withdraw",
+                    "dashed": "1",
+                    "data": [
+                    <% @withdraws.each_with_index do |withdraw ,index| %>
+                    <% ind = 1 %>
+                      <% while ind < withdraw.first.to_i  do %>
+                <% if ind == 1 %>
+                          {
+                              "value": "0K"
+                          }
+                    <% else %>
+                      ,{
+                                   "value": "0K"
+                               }
+                    <% end %>
+                    <% ind+=1 %>
+            <% end %>
+                      <% if index == 0 && ind == 1 %>
+                          {
+                              "value": "<%= (withdraw.last.pluck(:amount).sum/1000).round(2) %>K"
+                          }
+                  <% else %>
+                      ,{
+                                   "value": "<%= (withdraw.last.pluck(:amount).sum/1000).round(2) %>K"
+                               }
+                  <% end %>
+              
+                    <% end %>
+                    ]
+                }
+            ]
+        },
+        "events": {
+            "dataplotDragEnd": function (evt, arg) {
+                var dataIndex = arg && arg.dataIndex,
+                    prevVal = arg && arg.startValue,
+                    newVal = arg && parseInt(arg.endValue, 10),
+                    valuerow = document.getElementById("dragcolumn2d-sample-table")
+                .getElementsByTagName("tr")[1]
+                .getElementsByTagName('td');
+                
+                valuerow[dataIndex].innerHTML = newVal;
+            },
+            "dataRestored": function (evtObj) {
+                var estimatedOrigValues = ["19000", "16500", "14300", "10000", "9800"],
+                    i = 0,
+                    numVals = estimatedOrigValues.length,
+                    val,
+                    valuerow = document.getElementById("dragcolumn2d-sample-table")
+                .getElementsByTagName("tr")[1]
+                .getElementsByTagName('td');
+                
+                for (i; i < numVals; i += 1) {
+                    val = estimatedOrigValues[i];
+                    
+                    //set the original values
+                    valuerow[i + 1].innerHTML = val;
+                }
+            }
+        }
+    }).render();
+});
+</script>

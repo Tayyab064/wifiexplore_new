@@ -273,5 +273,18 @@
       $('#form-login').validate()
     })
     </script>
+
+    <script src="../alertify/alertify.min.js"></script>
+    <% flash.each do |name, msg| %>
+      <% if msg.is_a?(String) %>
+        <% if msg.split(' ')[0] == 'Error:' %>
+          <script type="text/javascript">
+            alertify.error("<%= msg%>");
+          </script>
+        <% else %>
+          <script type="text/javascript">alertify.success('<%= msg%>');</script>      
+        <%end%>
+      <% end %>
+    <% end %>
   </body>
 </html>

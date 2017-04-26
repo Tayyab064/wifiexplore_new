@@ -1,6 +1,7 @@
 <div class="page-content-wrapper ">
 <!-- START PAGE CONTENT -->
   <div class="content">
+    <div id="chart-container"></div>
     <!-- START CONTAINER FLUID -->
     <div class="container-fluid container-fixed-lg bg-white">
       <!-- START PANEL -->
@@ -50,3 +51,116 @@
     <!-- END CONTAINER FLUID -->
   </div>
 </div>
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" src="../plugin/fusionchart/fusioncharts.js"></script>
+<script type="text/javascript" src="../plugin/fusionchart/fusioncharts.powercharts.js"></script>
+<script type="text/javascript" src="../plugin/fusionchart/fusioncharts.theme.fint.js"></script>
+
+<script type="text/javascript">
+  FusionCharts.ready(function () {
+    var topProductsChart = new FusionCharts({
+        type: 'multilevelpie',
+        renderAt: 'chart-container',
+        id : "myChart",
+        width: '100%',
+        height: '70%',
+        dataFormat: 'json',
+        dataSource: {
+            "chart": {
+                "caption": "Lender Wifi's",
+                "subCaption": "",
+                "captionFontSize": "14",
+                "subcaptionFontSize": "14",
+                "baseFontColor" : "#333333",
+                "baseFont" : "Helvetica Neue,Arial",   
+                "basefontsize": "9",
+                "subcaptionFontBold": "0",
+                "bgColor" : "#ffffff",
+                "canvasBgColor" : "#ffffff",
+                "showBorder" : "0",
+                "showShadow" : "0",
+                "showCanvasBorder": "0",
+                "pieFillAlpha": "60",
+                "pieBorderThickness": "2",
+                "hoverFillColor": "#cccccc",
+                "pieBorderColor": "#ffffff",
+                "useHoverColor": "1",
+                "showValuesInTooltip": "1",
+                "showPercentInTooltip": "0",
+                "numberPrefix": "$",
+                "plotTooltext": "$label, $percentValue"
+            },
+            "category": [
+                {
+                    "label": "Wifi's",
+                    "color": "#ffffff",
+                    "value": "<%= @wifis.count %>",
+                    "category": [
+
+                    <% if @wifis.count > 10 %>
+                      <% val = 10.0 %>
+                  <% elsif @wifis.count == 0 %>
+                    <% val = 0.0 %>
+                  <% else %>
+                      <% val = ((1*100)/@wifis.count).to_f %>
+                  <% end %>
+
+                    <% @wifis.limit(10).each_with_index do |wif,ind| %>
+                      <% colr = ['#ff0000' , '#ff8000' , '#ffbf00' , '#bfff00' , '#00ff80' , '#00ffff' , '#0080ff' , '#8000ff' , '#ff0080' , '#00ff80'] %>
+                      <% if wif.connections.count > 0 %>
+                        <% dowd = wif.connections.pluck(:download_data).sum %>
+                        <% uplod = wif.connections.pluck(:upload_data).sum %>
+                    <% else %>
+                        <% dowd = 1 %>
+                        <% uplod = 1 %>
+                    <% end %>
+                    
+                    <% if ind == 0 %>
+                      {
+                            "label": "<%= wif.name %>",
+                            "color": "<%= colr[ind] %>",
+                            "value": "<%= val %>",
+                            "category": [
+                                {
+                                    "label": "Download Data",
+                                    "color": "<%= colr[ind] %>",
+                                    "value": "<%= (dowd/(dowd+uplod)*100).round(2) %>"
+                                },
+                                {
+                                    "label": "Upload Data",
+                                    "color": "<%= colr[ind] %>",
+                                    "value": "<%= (uplod/(dowd+uplod)*100).round(2) %>"
+                                }
+                    <% else %>
+                      ,{
+                            "label": "<%= wif.name %>",
+                            "color": "<%= colr[ind] %>",
+                            "value": "<%= val %>",
+                            "category": [
+              {
+                                "label": "Download Data",
+                                "color": "<%= colr[ind] %>",
+                                "value": "<%= (dowd/(dowd+uplod)*100).round(2) %>"
+                            },
+                            {
+                                "label": "Upload Data",
+                                "color": "<%= colr[ind] %>",
+                                "value": "<%= (uplod/(dowd+uplod)*100).round(2) %>"
+                            }
+                    <% end %>
+                    ]
+                      }
+                  <% end %>
+                    ]
+                }
+            ]
+        }
+    });
+    
+    topProductsChart.render();
+});
+</script>

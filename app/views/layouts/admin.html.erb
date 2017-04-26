@@ -31,6 +31,7 @@
     <link href="assets/plugins/datatables-responsive/css/datatables.responsive.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="pages/css/pages-icons.css" rel="stylesheet" type="text/css">
     <link class="main-stylesheet" href="pages/css/pages.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="../alertify/alertify.min.css" />
     <!--[if lte IE 9]>
 	<link href="assets/plugins/codrops-dialogFx/dialog.ie.css" rel="stylesheet" type="text/css" media="screen" />
 	<![endif]-->
@@ -88,20 +89,11 @@
             </a>
             <span class="icon-thumbnail"><i class="fa fa-money"></i></span>
           </li>
-          <li>
-            <a href="javascript:;"><span class="title">Wifi</span>
-            <span class=" arrow"></span></a>
+          <li class="">
+            <a href="<%= wifi_detail_path %>" class="detailed">
+              <span class="title">Wifi</span>
+            </a>
             <span class="icon-thumbnail"><i class="fa fa-wifi"></i></span>
-            <ul class="sub-menu">
-              <li class="">
-                <a href="<%= wifi_detail_path %>">Data</a>
-                <span class="icon-thumbnail">D</span>
-              </li>
-              <li class="">
-                <a href="<%= wifi_map_path %>">Map</a>
-                <span class="icon-thumbnail">M</span>
-              </li>
-            </ul>
           </li>
           <li class="">
             <a href="<%= connections_path %>" class="detailed">
@@ -1681,6 +1673,19 @@
 
     <script src="assets/plugins/rickshaw/rickshaw.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="assets/js/form_wizard.js"></script>
+
+    <script src="../alertify/alertify.min.js"></script>
+    <% flash.each do |name, msg| %>
+      <% if msg.is_a?(String) %>
+        <% if msg.split(' ')[0] == 'Error:' %>
+          <script type="text/javascript">
+            alertify.error("<%= msg%>");
+          </script>
+        <% else %>
+          <script type="text/javascript">alertify.success('<%= msg%>');</script>      
+        <%end%>
+      <% end %>
+    <% end %>
   </body>
 </html>
 

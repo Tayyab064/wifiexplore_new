@@ -2,6 +2,7 @@
 <div class="page-content-wrapper ">
 <!-- START PAGE CONTENT -->
   <div class="content">
+  <div id="chart-container"></div>
     <!-- START CONTAINER FLUID -->
     <div class="container-fluid container-fixed-lg bg-white">
       <!-- START PANEL -->
@@ -54,3 +55,79 @@
     <!-- END CONTAINER FLUID -->
   </div>
 </div>
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" src="../plugin/fusionchart/fusioncharts.js"></script>
+<script type="text/javascript" src="../plugin/fusionchart/fusioncharts.charts.js"></script>
+
+<script type="text/javascript">  
+FusionCharts.ready(function () {
+    var revenueChart = new FusionCharts({
+        type: 'column2d',
+        renderAt: 'chart-container',
+        width: '100%',
+        height: '70%',
+        dataFormat: 'json',
+        dataSource: {
+            "chart": {
+                "caption": "Recently Used Wifi's",
+                "subCaption": "Wifi",
+                "xAxisName": "Wifi",
+                "yAxisName": "Earnings (K)",
+                "numberPrefix": "$",
+                "paletteColors": "#0075c2",
+                "bgColor": "#ffffff",
+                "borderAlpha": "20",
+                "canvasBorderAlpha": "0",
+                "usePlotGradientColor": "0",
+                "plotBorderAlpha": "10",
+                "placevaluesInside": "1",
+                "rotatevalues": "1",
+                "valueFontColor": "#ffffff",                
+                "showXAxisLine": "1",
+                "xAxisLineColor": "#999999",
+                "divlineColor": "#999999",               
+                "divLineIsDashed": "1",
+                "showAlternateHGridColor": "0",
+                "subcaptionFontBold": "0",
+                "subcaptionFontSize": "14"
+            },            
+            "data": [
+                <% @recent_wifi.limit(12).each_with_index do |wif,ind| %>
+                  <% earning = 0 %>
+                  <% wif.connections.each do |coni| %>
+                    <% earning = earning + coni.total_bill %>
+                  <% end %>
+                  <% if ind == 0 %>
+                    {
+                        "label": "<%= wif.name %>",
+                        "value": "<%= (earning/1000).round(2) %>"
+                    }
+                  <% else %>
+                    ,{
+                        "label": "<%= wif.name %>",
+                        "value": "<%=  (earning/1000).round(2) %>"
+                    }
+                  <% end %>
+                <% end %>
+            ],
+            "trendlines": [
+                {
+                    "line": [
+                        {
+                            "startvalue": "<%= ((@total_earning/@wifi.count)/1000).round(2) %>",
+                            "color": "#1aaf5d",
+                            "valueOnRight": "1",
+                            "displayvalue": "Average Wifi Earning"
+                        }
+                    ]
+                }
+            ]
+        }
+    }).render();
+});
+
+</script>

@@ -3,6 +3,8 @@
 <div class="page-content-wrapper ">
 <!-- START PAGE CONTENT -->
   <div class="content">
+	  <div id="chart-container"></div>
+	  <hr>
     <!-- START CONTAINER FLUID -->
     <div class="container-fluid container-fixed-lg bg-white">
       <!-- START PANEL -->
@@ -221,3 +223,97 @@
     <!-- END CONTAINER FLUID -->
   </div>
 </div>
+
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" src="../plugin/fusionchart/fusioncharts.js"></script>
+<script type="text/javascript">
+	FusionCharts.ready(function(){
+    var salesChart = new FusionCharts({
+        type: 'scrollline2d',
+        dataFormat: 'json',
+        renderAt: 'chart-container',
+        width: '100%',
+        height: '70%',
+        dataSource: {
+            "chart": {
+                "caption": "Reprorts",
+                "subCaption": "This Year",
+                "xAxisName": "Month",
+                "yAxisName": "Report",
+                "showValues": "0",
+                "numberPrefix": "",
+                "showBorder": "0",
+                "showShadow": "0",
+                "bgColor": "#ffffff",
+                "paletteColors": "#008ee4",
+                "showCanvasBorder": "0",
+                "showAxisLines": "0",
+                "showAlternateHGridColor": "0",
+                "divlineAlpha": "100",
+                "divlineThickness": "1",
+                "divLineIsDashed": "1",
+                "divLineDashLen": "1",
+                "divLineGapLen": "1",
+                "lineThickness": "3",  
+                "flatScrollBars": "1",
+                "scrollheight": "10",
+                "numVisiblePlot": "12",
+                "showHoverEffect":"1"
+            },
+            "categories": [
+                {
+                    "category": [
+                        { "label": "Jan" },
+                        { "label": "Feb" },
+                        { "label": "Mar" },
+                        { "label": "Apr" },
+                        { "label": "May" },
+                        { "label": "Jun" },
+                        { "label": "Jul" },
+                        { "label": "Aug" },
+                        { "label": "Sep" },
+                        { "label": "Oct" },
+                        { "label": "Nov" },
+                        { "label": "Dec" }
+                    ]
+                }
+            ],
+            "dataset": [
+                {
+                    "data": [
+                    <% @thisyear.each_with_index do |earn ,index| %>
+                    	<% ind = 1 %>
+                    	<% while ind < earn.first.to_i  do %>
+						   	<% if ind == 1 %>
+			                    {
+			                        "value": "0"
+			                    }
+			            	<% else %>
+			            		,{
+	                                 "value": "0"
+	                             }
+			            	<% end %>
+			            	<% ind+=1 %>
+						<% end %>
+	                    <% if index == 0 && ind == 1 %>
+			                    {
+			                        "value": "<%= (earn.last.count) %>"
+			                    }
+			            <% else %>
+			            		,{
+	                                 "value": "<%= (earn.last.count) %>"
+	                             }
+			            <% end %>
+			        
+                    <% end %>
+                    ]
+                }
+            ]
+        }
+    }).render();
+});
+</script>

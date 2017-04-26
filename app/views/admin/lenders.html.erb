@@ -1,6 +1,8 @@
 <div class="page-content-wrapper ">
 <!-- START PAGE CONTENT -->
   <div class="content">
+  	<div id="chart-container"></div>
+  	<hr>
     <!-- START CONTAINER FLUID -->
     <div class="container-fluid container-fixed-lg bg-white">
       <!-- START PANEL -->
@@ -89,3 +91,139 @@
     <!-- END CONTAINER FLUID -->
   </div>
 </div>
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" src="../plugin/fusionchart/fusioncharts.js"></script>
+<script type="text/javascript" src="../plugin/fusionchart/fusioncharts.powercharts.js"></script>
+<script type="text/javascript">
+  FusionCharts.ready(function () {
+    var inventoryChart = new FusionCharts({
+        type: 'dragcolumn2d',
+        renderAt: 'chart-container',
+        width: '100%',
+        height: '450',
+        dataFormat: 'json',
+        dataSource: {
+            "chart": {
+                "caption": "Recent lenders",                
+                "subCaption": "Wifis & Earnings",
+                "xAxisName": "Lender",
+                "yAxisName": "Wifis & Earnings(K)",
+                "paletteColors": "#0075c2,#1aaf5d",
+                "bgColor": "#ffffff",
+                "showAlternateHGridColor": "0",
+                "showBorder": "0",
+                "showCanvasBorder": "0",
+                "baseFontColor": "#333333",
+                "baseFont": "Helvetica Neue,Arial",
+                "captionFontSize": "18",
+                "subcaptionFontSize": "16",
+                "subcaptionFontBold": "0",
+                "usePlotGradientColor": "0",
+                "toolTipColor": "#ffffff",
+                "toolTipBorderThickness": "0",
+                "toolTipBgColor": "#000000",
+                "toolTipBgAlpha": "80",
+                "toolTipBorderRadius": "2",
+                "toolTipPadding": "5",
+                "legendBgAlpha": "0",
+                "legendBorderAlpha": "0",
+                "legendShadow": "0",
+                "legendItemFontSize": "10",
+                "legendItemFontColor": "#666666",
+                "legendCaptionFontSize": "9",
+                "divlineAlpha": "100",
+                "divlineColor": "#999999",
+                "divlineThickness": "1",
+                "divLineIsDashed": "1",
+                "divLineDashLen": "1",
+                "divLineGapLen": "1",
+            },
+            "categories": [
+                {
+                    "category": [
+                    <% @lender.order(created_at: 'DESC').limit(10).each_with_index do |wif,index| %>
+                    <% if index == 0 %>
+                        {
+                            "label": "<%= wif.name %>"
+                        }
+                    <% else %>
+                        ,{
+                            "label": "<%= wif.name %>"
+                        }
+                    <% end %>
+                    <% end %>
+                    ]
+                }
+            ],
+            "dataset": [
+                {
+                    "seriesname": "Wifis",
+                    "allowDrag": "0",
+                    "data": [
+                    <% @lender.order(created_at: 'DESC').limit(10).each_with_index do |wif,index| %>
+                    <% if index == 0 %>
+                        {
+                            "value": "<%= wif.wifis.count %>"
+                        }
+                    <% else %>
+                        ,{
+                            "value": "<%= wif.wifis.count %>"
+                        }
+                    <% end %>
+                    <% end %>
+                            ]
+                }, 
+                {
+                    "seriesname": "Earnings",
+                    "dashed": "1",
+                    "data": [
+                    <% @lender.order(created_at: 'DESC').limit(10).each_with_index do |wif,index| %>
+                    <% if index == 0 %>
+                        {
+                            "value": "<%= Connection.where(wifi_id: wif.wifis.pluck(:id)).pluck(:total_bill).sum/1000 %>"
+                        }
+                    <% else %>
+                        ,{
+                            "value": "<%= Connection.where(wifi_id: wif.wifis.pluck(:id)).pluck(:total_bill).sum/1000 %>"
+                        }
+                    <% end %>
+                    <% end %>
+                    ]
+                }
+            ]
+        },
+        "events": {
+            "dataplotDragEnd": function (evt, arg) {
+                var dataIndex = arg && arg.dataIndex,
+                    prevVal = arg && arg.startValue,
+                    newVal = arg && parseInt(arg.endValue, 10),
+                    valuerow = document.getElementById("dragcolumn2d-sample-table")
+                .getElementsByTagName("tr")[1]
+                .getElementsByTagName('td');
+                
+                valuerow[dataIndex].innerHTML = newVal;
+            },
+            "dataRestored": function (evtObj) {
+                var estimatedOrigValues = ["19000", "16500", "14300", "10000", "9800"],
+                    i = 0,
+                    numVals = estimatedOrigValues.length,
+                    val,
+                    valuerow = document.getElementById("dragcolumn2d-sample-table")
+                .getElementsByTagName("tr")[1]
+                .getElementsByTagName('td');
+                
+                for (i; i < numVals; i += 1) {
+                    val = estimatedOrigValues[i];
+                    
+                    //set the original values
+                    valuerow[i + 1].innerHTML = val;
+                }
+            }
+        }
+    }).render();
+});
+</script>
