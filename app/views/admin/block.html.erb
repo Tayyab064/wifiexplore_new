@@ -66,18 +66,18 @@
             <thead> 
 				<tr> 
 					<th >Name</th> 
-					<th >Email</th> 		 
-					<th >Mobile Number</th> 
+					<th >Address</th> 		 
+					<th >SSID</th> 
 					<th>Unblock</th>
 				</tr> 
 			</thead> 
 			<tbody> 
-				<% @user_block.each do |user| %>
+				<% @wifi_block.each do |user| %>
 					<tr>
 						<td><%= user.name %></td>
-						<td><%= user.email %></td>
-						<td><%= user.mobile_number %></td>
-						<td><%= link_to('Blocked' , unblock_user_path(user.id) , class: 'btn btn-danger') %></td>
+						<td><%= user.address %></td>
+						<td><%= user.ssid %></td>
+						<td><%= link_to('Blocked' , unblock_wifi_path(user.id) , class: 'btn btn-danger') %></td>
 					</tr>
 				<% end %>
 			</tbody> 
