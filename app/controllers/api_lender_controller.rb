@@ -83,6 +83,7 @@ class ApiLenderController < ApplicationController
 
 	def earning
 		conn = Connection.where(wifi_id: @current_lender.wifis.pluck(:id))
+		@connected_users = conn.where(disconnected_at: nil).count
 		@earning = conn.for_year.order(created_at: 'ASC').group_by(&:month)
 		@rating = 0
 		@download_data = conn.pluck(:download_data).sum.round(2)
@@ -104,6 +105,7 @@ class ApiLenderController < ApplicationController
 
 	def wifi_earning
 		conn =  @current_lender.wifis.find(params[:id]).connections
+		@connected_users = conn.where(disconnected_at: nil).count
 		@earning = conn.for_year.order(created_at: 'ASC').group_by(&:month)
 		@rating = 0
 		@download_data = conn.pluck(:download_data).sum.round(2)

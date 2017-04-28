@@ -3,6 +3,7 @@ json.earning do
 	json.download_data @download_data
 	json.upload_data @upload_data
 	json.connections @connection
+	json.connected_users @connected_users
 	json.total_earnings @earn
 	
 	json.monthly_earning do
