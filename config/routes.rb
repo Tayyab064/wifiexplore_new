@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       put 'password' => 'api_lender#update_password'
       get 'wallet' => 'api_lender#wallet'
       get 'earning' => 'api_lender#earning'
+      get 'wifis/:id' => 'api_lender#wifi_earning'
 
   	end
 

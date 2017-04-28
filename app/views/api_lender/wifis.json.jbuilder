@@ -1,4 +1,5 @@
 json.wifis(@wifi) do |wif|
+	json.id wif.id
 	json.name  wif.name
 	json.ssid  wif.ssid
 	json.address  wif.address

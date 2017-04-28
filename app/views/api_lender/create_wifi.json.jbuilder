@@ -3,6 +3,7 @@ if @message.present?
 	json.errors @wifi.errors
 else
 	json.wifi do
+		json.id	@wifi.id
 		json.name  @wifi.name
 		json.ssid  @wifi.ssid
 		json.password  @wifi.password

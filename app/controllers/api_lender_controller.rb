@@ -102,6 +102,27 @@ class ApiLenderController < ApplicationController
 		end
 	end
 
+	def wifi_earning
+		conn =  @current_lender.wifis.find(params[:id]).connections
+		@earning = conn.for_year.order(created_at: 'ASC').group_by(&:month)
+		@rating = 0
+		@download_data = conn.pluck(:download_data).sum.round(2)
+		@upload_data = conn.pluck(:upload_data).sum.round(2)
+		@connection = conn.count
+		@earn = conn.pluck(:total_bill).sum.round(2)
+		rat = 0
+		rat_coun = 0
+		conn.each do |conni|
+			if conni.rating.present?
+				rat = rat + conni.rating.rate
+				rat_coun += 1
+			end
+		end
+		if rat > 0 && rat_coun > 0
+			@rating = (rat / rat_coun).round
+		end
+	end
+
 	private
 	def signup_params
 		params.require(:lender).permit(:name , :email , :mobile_number , :password)
