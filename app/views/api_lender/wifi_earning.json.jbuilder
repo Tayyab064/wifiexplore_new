@@ -5,6 +5,7 @@ json.earning do
 	json.connections @connection
 	json.connected_users @connected_users
 	json.total_earnings @earn
+	json.reports @reports
 	
 	json.monthly_earning do
 		json.array!(@earning) do |month, req|

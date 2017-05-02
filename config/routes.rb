@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       get 'wallet' => 'api_lender#wallet'
       get 'earning' => 'api_lender#earning'
       get 'wifis/:id' => 'api_lender#wifi_earning'
+      post 'forget_password' => 'api_lender#forget_password'
 
   	end
 
@@ -38,6 +39,10 @@ Rails.application.routes.draw do
     get 'signout' => 'lender#signout' , as: 'lender_signout'
     post 'withdraw' => 'lender#withdraw_amount' , as: 'lender_withdraw'
     get 'withdraw' => 'lender#withdraw' , as: 'lender_withdraw_s'
+
+
+    get 'reset_password/:token' => 'api_lender#reset_password'
+    put 'update_password' => 'api_lender#update_password'
 
   end
 

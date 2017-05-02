@@ -1,6 +1,6 @@
 class ApiLenderController < ApplicationController
 	skip_before_action :verify_authenticity_token
-	before_action :restrict_lender , except: [:signup , :signin]
+	before_action :restrict_lender , except: [:signup , :signin , :reset_password , :update_password]
 
 	def signup
 		em = params[:lender][:email].downcase
@@ -112,6 +112,7 @@ class ApiLenderController < ApplicationController
 		@upload_data = conn.pluck(:upload_data).sum.round(2)
 		@connection = conn.count
 		@earn = conn.pluck(:total_bill).sum.round(2)
+		@reports = @current_lender.wifis.find(params[:id]).reports.count
 		rat = 0
 		rat_coun = 0
 		conn.each do |conni|
@@ -122,6 +123,34 @@ class ApiLenderController < ApplicationController
 		end
 		if rat > 0 && rat_coun > 0
 			@rating = (rat / rat_coun).round
+		end
+	end
+
+	def forget_password
+		if len = Lender.find_by_email(params[:email])
+			len.regenerate_password_reset_token
+			LenderMailer.reset_password(len).deliver_later
+			render json: {'message' => 'Kindly check your email'} , status: 200
+		else
+			render json: {'message' => 'Invalid email address'} , status: 404
+		end
+	end
+
+	def reset_password
+		if token = Lender.find_by_password_reset_token(params[:token])
+			addre = '/reset_password.html?token=' + params[:token]
+			redirect_to addre
+		else
+			render json: {'message' => "Invalid forgot password token"}, status: :unauthorized
+		end
+	end
+
+	def update_password
+		if lender = Lender.find_by_password_reset_token(params[:token])
+			lender.update(password: params[:password])
+			render json: {'message' => "Successfully Updated"}, status: :200
+		else
+			render json: {'message' => "Invalid forgot password token"}, status: :unauthorized
 		end
 	end
 

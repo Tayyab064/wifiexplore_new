@@ -1,0 +1,87 @@
+
+
+@media (max-width: 992px) and (min-width: 767px) {
+
+
+/*   .wifi_background_img {
+       background-image: url('img/wifi-2-3.jpg');
+       background-size: cover;
+       width: 100%;
+       height:678px;
+    }
+*/
+
+    .input_width {
+       margin-bottom: 4% !important;
+     }
+
+    .mockup_img {
+       padding: 0 4%;
+    }
+
+.btn-padd {
+    padding-top: 0.5%;
+}
+
+}
+
+
+
+@media (max-width: 768px) and (min-width: 480px) {
+
+
+/*   .wifi_background_img {
+       background-image: url('img/wifi-2-3-sm.jpg');
+       background-size: cover;
+       width: 100%;
+       height:678px; 
+
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}*/
+
+
+.wifi_logo img {
+  padding: 8% 0 0 0;
+}
+
+
+
+}
+
+
+
+@media (max-width: 480px) and (min-width: 320px) {
+  
+/*   .wifi_background_img {
+       background-image: url('img/wifi-2-3.jpg');
+       background-size: cover;
+       width: 100%;
+       height:678px;    
+}
+*/
+
+.wifi_logo img {
+       width: 100px;   
+}
+
+.wifi_logo {
+  padding-top: 15%;
+}
+
+.heading h1 {
+    font-size: 30px;
+    margin: 14% 0px 5.5%;
+           
+}
+
+/*
+body {
+    overflow-y:hidden;
+}
+*/
+
+
+}
