@@ -147,7 +147,7 @@ class ApiLenderController < ApplicationController
 
 	def update_password_for
 		if lender = Lender.find_by_password_reset_token(params[:token])
-			lender.update(password: params[:password])
+			lender.update(password: params[:password] , password_reset_token: nil)
 			render json: {'message' => "Successfully Updated"}, status: 200
 		else
 			render json: {'message' => "Invalid forgot password token"}, status: :unauthorized
