@@ -1,6 +1,6 @@
 class ApiLenderController < ApplicationController
 	skip_before_action :verify_authenticity_token
-	before_action :restrict_lender , except: [:signup , :signin , :reset_password , :update_password]
+	before_action :restrict_lender , except: [:signup , :signin , :forget_password , :reset_password , :update_password_for]
 
 	def signup
 		em = params[:lender][:email].downcase
@@ -145,7 +145,7 @@ class ApiLenderController < ApplicationController
 		end
 	end
 
-	def update_password
+	def update_password_for
 		if lender = Lender.find_by_password_reset_token(params[:token])
 			lender.update(password: params[:password])
 			render json: {'message' => "Successfully Updated"}, status: 200

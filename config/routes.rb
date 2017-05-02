@@ -42,7 +42,7 @@ Rails.application.routes.draw do
 
 
     get 'reset_password/:token' => 'api_lender#reset_password'
-    put 'update_password' => 'api_lender#update_password'
+    put 'update_password' => 'api_lender#update_password_for'
 
   end
 
