@@ -18,6 +18,27 @@ Rails.application.routes.draw do
 
   	end
 
+    scope 'user' do
+
+      post 'signup' => 'api_user#signup'
+      post 'signin' => 'api_user#signin'
+      put 'password' => 'api_user#update_password'
+      post 'forget_password' => 'api_user#forget_password'
+
+      get 'wifis' => 'api_user#nearby_wifis'
+      post 'connect' => 'api_user#connect'
+      post 'disconnect' => 'api_user#disconnect'
+      post 'rate' => 'api_user#rate_wifi'
+
+    end
+
+  end
+
+  scope 'user' do
+
+    get 'reset_password/:token' => 'api_user#reset_password'
+    put 'update_password' => 'api_user#update_password_for'
+
   end
 
   scope 'lender' do

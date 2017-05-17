@@ -14,6 +14,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def restrict_user
+    restrict_access_to_user || render_unauthorized
+  end
+
+  def restrict_access_to_user
+    authenticate_or_request_with_http_token do |token, _options|
+      if User.exists?(token: token) && (user = User.find_by_token(token))
+        @current_user = user
+      end
+    end
+  end
+
   def is_lender
     if session[:lender].present?
       unless u = Lender.find_by_email(session[:lender])
