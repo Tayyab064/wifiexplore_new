@@ -58,7 +58,7 @@
 						<td><%= wifi_conn %></td>
 						<td><%= user_conn %></td>
 						<td><%= stripe.status.capitalize %></td>
-						<td><%= link_to('Refund' , refund_stripe_path(stripe.id) , class: 'btn btn-danger') %></td>
+						<td><%= (stripe.amount==stripe.amount_refunded) ? 'Refunded' : link_to('Refund' , refund_stripe_path(stripe.id) , class: 'btn btn-danger') %></td>
 					</tr>
 				<% end %>						
 			</tbody>  

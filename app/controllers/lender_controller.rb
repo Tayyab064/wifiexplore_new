@@ -130,8 +130,28 @@ class LenderController < ApplicationController
 		end
 	end
 
+	def bank_information
+		@bank = @lender.bank_information
+	end
+
+	def update_bank
+		@lender.bank_information.update bank_st_params
+		redirect_to :back , notice: 'Successfully Updated'
+	end
+
+	def add_bank
+		c = BankInformation.new bank_params
+		c.lender_id = @lender.id
+		c.save
+		redirect_to :back , notice: 'Successfully Added'
+	end
+
 	private
 	def bank_params
 		params.permit(:currency , :country , :name , :routing_number , :account_number)
+	end
+
+	def bank_st_params
+		params.require(:bank_information).permit(:currency , :country , :name , :routing_number , :account_number)
 	end
 end

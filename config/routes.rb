@@ -65,6 +65,10 @@ Rails.application.routes.draw do
     get 'reset_password/:token' => 'api_lender#reset_password'
     put 'update_password' => 'api_lender#update_password_for'
 
+    get 'bank_information' => 'lender#bank_information' , as: 'lender_bank_info'
+    patch 'bank_information' => 'lender#update_bank'
+    post 'bank_information' => 'lender#add_bank'
+
   end
 
 
