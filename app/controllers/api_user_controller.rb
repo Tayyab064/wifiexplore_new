@@ -93,7 +93,7 @@ class ApiUserController < ApplicationController
 			conn.update(disconnected_at: Time.now , download_data: params[:download_data], upload_data: params[:upload_data])
 			conn.calculate_bill
 			@current_user.update(successfully_terminated: true)
-			render json: {bill: conn.total_bill , time: (conn.disconnected_at - conn.connected_at)/60.round } , status: 200
+			render json: {bill: conn.total_bill , time: ((conn.disconnected_at - conn.connected_at)/60).round } , status: 200
 		else
 			render json: {messsage: 'Invalid connection id'} , status: 422
 		end
