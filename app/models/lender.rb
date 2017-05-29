@@ -6,6 +6,8 @@ class Lender < ApplicationRecord
 
 	before_create :generate_mobile_number_code
 
+	mount_uploader :image, ImageUploader
+
 	##Validation
 	validates_uniqueness_of :email
 	validates_uniqueness_of :mobile_number

@@ -10,6 +10,6 @@ else
 		json.mobile_number_verified @lender.mobile_number_verified
 		json.blocked @lender.blocked
 		json.token @lender.token
-		json.image ''
+		json.image @lender.image_url
 	end
 end

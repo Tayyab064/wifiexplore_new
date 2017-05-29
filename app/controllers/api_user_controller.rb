@@ -112,6 +112,7 @@ class ApiUserController < ApplicationController
 		end
 	end
 
+
 	private
 	def signup_params
 		params.require(:user).permit(:name , :email , :mobile_number , :password)

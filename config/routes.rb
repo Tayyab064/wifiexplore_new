@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       get 'earning' => 'api_lender#earning'
       get 'wifis/:id' => 'api_lender#wifi_earning'
       post 'forget_password' => 'api_lender#forget_password'
+      post 'image' => 'api_lender#image'
 
   	end
 

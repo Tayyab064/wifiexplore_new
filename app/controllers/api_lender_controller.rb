@@ -154,6 +154,11 @@ class ApiLenderController < ApplicationController
 		end
 	end
 
+	def image
+		@current_lender.update(image: params[:image])
+		render json: { 'message' => @current_lender.image_url } , status: 200
+	end
+
 	private
 	def signup_params
 		params.require(:lender).permit(:name , :email , :mobile_number , :password)
