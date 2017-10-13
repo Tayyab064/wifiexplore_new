@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170529111514) do
+ActiveRecord::Schema.define(version: 20171013115006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,11 +116,14 @@ ActiveRecord::Schema.define(version: 20170529111514) do
   end
 
   create_table "withdraws", force: :cascade do |t|
-    t.float    "amount",     default: 0.0
-    t.boolean  "transfered", default: false
+    t.float    "amount",      default: 0.0
+    t.boolean  "transfered",  default: false
     t.integer  "lender_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "name"
+    t.string   "email"
+    t.string   "paypalemail"
     t.index ["lender_id"], name: "index_withdraws_on_lender_id", using: :btree
   end
 

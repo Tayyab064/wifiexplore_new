@@ -52,14 +52,19 @@ class ApiLenderController < ApplicationController
 	end
 
 	def withdraw
-		earning = Connection.where(wifi_id: @current_lender.wifis.pluck(:id)).pluck(:total_bill).sum
-		withdraw = @current_lender.withdraws.pluck(:amount).sum
-		max_with = earning - withdraw
-		if params[:lender][:amount].to_i < max_with
-			Withdraw.create(amount: params[:lender][:amount], lender_id: @current_lender.id)
-			render json: {'message' => 'Successfully submitted'} , status: 200
+		if params[:lender][:amount].present? && params[:lender][:paypalemail].present?
+			earning = Connection.where(wifi_id: @current_lender.wifis.pluck(:id)).pluck(:total_bill).sum
+			withdraw = @current_lender.withdraws.pluck(:amount).sum
+			max_with = earning - withdraw
+			if params[:lender][:amount].to_i < max_with
+				Withdraw.create(amount: params[:lender][:amount] , name: params[:lender][:name] , email: params[:lender][:email] , paypalemail: params[:lender][:paypalemail], lender_id: @current_lender.id)
+				render json: {'message' => 'Successfully submitted'} , status: 200
+			else
+				message = 'Maximum withdraw amount is ' + max_with.to_s
+				render json: {'message' => message } , status: 422
+			end
 		else
-			message = 'Maximum withdraw amount is ' + max_with.to_s
+			message = 'Check parameters'
 			render json: {'message' => message } , status: 422
 		end
 	end

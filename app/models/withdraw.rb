@@ -1,6 +1,7 @@
 class Withdraw < ApplicationRecord
 	belongs_to :lender
 
+
 	scope :for_year, lambda {where("created_at >= ? and created_at <= ?", "#{Date.today.year}-01-01", "#{Date.today.year}-12-31")}
 
 	def week
