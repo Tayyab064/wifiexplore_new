@@ -20,45 +20,24 @@
         <div class="panel-body">
           <table class="table table-hover demo-table-search" id="tableWithSearch">
             <thead> 
-				<tr> 
-					<th >Charge ID</th> 
+				<tr>
+					<th>Date</th>
 					<th >Amount</th>
-					<th>Amount Refunded</th>
-					<!-- <th >Currency</th> 	 -->	 
-					<th >Wifi</th> 
-					<th>User</th>
+					<th>Name</th>	 
+					<th>Paypal Email</th> 
+					<th>Email</th>
 					<th>Status</th>
-					<th>Refund</th>
 				</tr> 
 			</thead> 
 			<tbody> 
-				<% @str.data.each do |stripe| %>
-					<% st = stripe.description.split(' ')[2] %>
-					<% if Connection.exists?(st) %>
-						<% conni = Connection.find(st) %>
-						<% if conni.wifi.present? %>
-							<% wifi_conn = conni.wifi.name %>
-						<% else %>
-							<% wifi_conn = 'Missing' %>
-						<% end %>
-						<% if conni.user.present? %>
-							<% user_conn = conni.user.email %>
-						<% else %>
-							<% user_conn = 'Missing' %>
-						<% end %>
-					<% else %>
-						<% user_conn = 'Missing' %>
-						<% wifi_conn = 'Missing' %>
-					<% end %>
+				<% @str.each do |stripe| %>
 					<tr>
-						<td><%= stripe.id %></td>
+						<td><%= stripe.created_at.strftime('%H:%M %m/%d/%Y') %></td>
 						<td><%= stripe.amount/100 %></td>
-						<td><%= stripe.amount_refunded/100 %></td>
-						<!-- <td><%= stripe.currency.upcase %></td> -->
-						<td><%= wifi_conn %></td>
-						<td><%= user_conn %></td>
-						<td><%= stripe.status.capitalize %></td>
-						<td><%= (stripe.amount==stripe.amount_refunded) ? 'Refunded' : link_to('Refund' , refund_stripe_path(stripe.id) , class: 'btn btn-danger') %></td>
+						<td><%= stripe.lender.name %></td>
+						<td><%= stripe.paypalemail %></td>
+						<td><%= stripe.lender.email %></td>
+						<td><%= stripe.transfered ? 'Transfered' : 'Pending' %></td>
 					</tr>
 				<% end %>						
 			</tbody>  

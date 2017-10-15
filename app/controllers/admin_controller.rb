@@ -166,10 +166,10 @@ class AdminController < ApplicationController
 	end
 
 	def stripe_account_list
-		require "stripe"
-		Stripe.api_key = "sk_test_9VYi8WoB1EmZIrmrdNLgXR6U"
+		#require "stripe"
+		#Stripe.api_key = "sk_test_9VYi8WoB1EmZIrmrdNLgXR6U"
 
-		@str =  Stripe::Charge.list(:limit => 100)
+		@str =  Withdraw.where(transfered: false).order(created_at: 'DESC')
 	end
 
 	def stripe_account_refund
