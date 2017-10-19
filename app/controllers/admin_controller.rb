@@ -170,6 +170,8 @@ class AdminController < ApplicationController
 		#Stripe.api_key = "sk_test_9VYi8WoB1EmZIrmrdNLgXR6U"
 
 		@str =  Withdraw.where(transfered: false).order(created_at: 'DESC')
+		@report = Withdraw.all.order(created_at: 'DESC')
+		@thisyear = @report.for_year.order(created_at: 'ASC').group_by(&:month)
 	end
 
 	def stripe_account_refund
