@@ -111,6 +111,8 @@ Rails.application.routes.draw do
 
     get 'wifis_:id' => 'admin#lender_wifis' , as: 'lender_wifis'
 
+    get 'paypal_transfer' => 'admin#paypal_transfer' , as: 'paypal_transfer'
+
   end
 
 end

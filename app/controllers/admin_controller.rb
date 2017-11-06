@@ -230,4 +230,29 @@ class AdminController < ApplicationController
 		@report = Report.all.order(created_at: 'DESC')
 		@thisyear = @report.for_year.order(created_at: 'ASC').group_by(&:month)
 	end
+
+	def paypal_transfer
+
+		require 'active_merchant'
+
+		ActiveMerchant::Billing::Base.mode = :test
+		ActiveMerchant::Billing::PaypalGateway.default_currency = 'USD'
+
+		gateway = ActiveMerchant::Billing::PaypalGateway.new({
+		:login => 'nomanarif.cdz@gmail.com',
+		:password => 'noman0987',
+		:signature=> 'EEpmS30cUzkzjWKgT2OK4Vq64-cvh3ZQnFGjuYzpe_O_mOPR0hczycnO2jt4lYhDioIpfgYSAk3WLJLz'})
+
+		receiver = 'muhammad.tayyabmukhtar@yahoo.com'
+
+		res = gateway.transfer(1000, receiver, :subject => 'Payment from WifiExplore', :note => 'Withdrawal')
+
+		if res.success?
+			msg = 'Successfully transferred'
+		else
+			msg = 'Error: ' + res.message.to_s
+		end
+
+		redirect_to '/admin/paypal' , notice: msg
+	end
 end

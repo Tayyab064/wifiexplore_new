@@ -39,7 +39,7 @@
 						<td><%= stripe.lender.name %></td>
 						<td><%= stripe.paypalemail %></td>
 						<td><%= stripe.lender.email %></td>
-						<td><%= stripe.transfered ? 'Transfered' : 'Pending' %></td>
+						<td><%= link_to('Transfer' , paypal_transfer_path , class: 'btn btn-danger') %></td>
 					</tr>
 				<% end %>						
 			</tbody>  
