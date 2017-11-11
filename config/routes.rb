@@ -31,6 +31,10 @@ Rails.application.routes.draw do
       post 'disconnect' => 'api_user#disconnect'
       post 'rate' => 'api_user#rate_wifi'
 
+      post 'transaction' => 'api_user#pay_bill'
+      get 'status' => 'api_user#status'
+      get 'cleared' => 'api_user#mark_successfully'
+      get 'history' =>'api_user#history'
     end
 
   end

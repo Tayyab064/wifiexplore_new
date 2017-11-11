@@ -92,10 +92,25 @@ class ApiUserController < ApplicationController
 		if @current_user.connections.exists?(id: params[:connection_id]) && (conn = @current_user.connections.find(params[:connection_id]))
 			conn.update(disconnected_at: Time.now , download_data: params[:download_data], upload_data: params[:upload_data])
 			conn.calculate_bill
-			@current_user.update(successfully_terminated: true)
+			#@current_user.update(successfully_terminated: true)
 			render json: {bill: conn.total_bill , time: ((conn.disconnected_at - conn.connected_at)/60).round } , status: 200
 		else
 			render json: {messsage: 'Invalid connection id'} , status: 422
+		end
+	end
+
+	def pay_bill
+		if params[:amount].present? && (params[:amount].to_f > 0.0)
+			c = Transaction.create(amount: params[:amount].to_f , user_id: @current_user.id)
+			@bill = @current_user.connections.pluck(:total_bill).sum
+			@trans =  @current_user.transactions.pluck(:amount).sum
+			@sta = @bill - @trans
+			unless @sta > 0
+				@current_user.update(successfully_terminated: true)
+			end
+			render json: {message: "Amount Paid #{c.amount}"} , status: 200
+		else
+			render json: {messsage: 'Check parameter'} , status: 422
 		end
 	end
 
@@ -112,6 +127,32 @@ class ApiUserController < ApplicationController
 		end
 	end
 
+	def status
+		@bill = @current_user.connections.pluck(:total_bill).sum
+		@trans =  @current_user.transactions
+		@tra = @trans.pluck(:amount).sum
+		sta = @bill - @tra
+		if sta <= 0
+			@message = 'Payment Cleared'
+		else
+			@message = 'Payment not cleared'
+		end
+		render status: 200
+	end
+
+	def mark_successfully
+		@current_user.update(successfully_terminated: true)
+		render json: {'message' => 'Continue enjoying WifiExplore'} , status: 200
+	end
+
+	def history
+		offseti = 0
+	    if params[:page].present?
+	    	offseti = params[:page]
+	    end
+		@conn = @current_user.connections.order(created_at: 'DESC').offset(offseti*10).limit(10)
+		render status: 200
+	end
 
 	private
 	def signup_params

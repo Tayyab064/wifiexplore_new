@@ -13,4 +13,6 @@ class User < ApplicationRecord
 
 	has_many :connections , dependent: :destroy
 	has_many :reports , dependent: :destroy
+
+	has_many :transactions , dependent: :destroy
 end
